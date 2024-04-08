@@ -3,22 +3,23 @@ import './App.css';
 import SignIn from './authentication/SignIn';
 import CreateAccount from './authentication/CreateAccount';
 import Homepage from './pages/Homepage';
-import { Navigate, Route, Routes, BrowserRouter as Router } from 'react-router-dom';
+import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material';
-import { red } from '@mui/material/colors';
 
 
 
 const theme = createTheme({
     palette: {
         primary: {
-            main: red[500],
-            light: red[300],
-            dark: red[700],
+            main: '#1d3557',
             contrastText: '#fff',
           },
           secondary: {
-            main: '#01579b',
+            main: '#1d3557',
+            darkBlue: '#457b9d',
+            lightBlue: '#a8dadc',
+            lightRed: '#ee747e',
+            red: '#e63946'
           },
     },
     typography: {
