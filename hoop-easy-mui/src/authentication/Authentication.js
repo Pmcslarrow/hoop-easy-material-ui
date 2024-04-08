@@ -35,7 +35,6 @@ async function createNewUser(first, last, username, email, password) {
             .catch((err) => {
                 reject(new Error("Failed to create new user"))
             })
-        
     })
 }
 
