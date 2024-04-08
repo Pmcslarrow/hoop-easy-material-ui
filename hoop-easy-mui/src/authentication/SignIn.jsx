@@ -15,10 +15,9 @@ import { useNavigate } from 'react-router-dom';
 import { Alert } from '@mui/material';
 
 
-export default function SignIn({props}) {
+export default function SignIn({ getUser }) {
   const theme = useTheme()
   const navigate = useNavigate()
-  const {setUserCredentials} = props
   const [errorMessage, setErrorMessage] = React.useState("")
   const [loading, setLoading] = React.useState(false);
 
@@ -31,6 +30,7 @@ export default function SignIn({props}) {
             const userCredential = await loginUser(data.get('email'), data.get('password'));
 
             if (userCredential.user.emailVerified) {
+                await getUser(data.get('email'))
                 navigate('/homepage');
             } else {
                 setErrorMessage('Please verify your email');

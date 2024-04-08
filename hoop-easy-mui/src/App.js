@@ -1,13 +1,13 @@
-import React from 'react';
 import './App.css';
+import React from 'react';
 import SignIn from './authentication/SignIn';
 import CreateAccount from './authentication/CreateAccount';
 import Homepage from './pages/Homepage';
+import axios from 'axios';
 import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material';
 
-
-
+const UserContext = React.createContext()
 const theme = createTheme({
     palette: {
         primary: {
@@ -32,24 +32,30 @@ const theme = createTheme({
     spacing: 10,
 })
 
-
 function App() {
-    const [userCredential, setUserCredentials] = React.useState({})
+    const [currentUser, setCurrentUser] = React.useState()
 
-    React.useEffect(()=>{
-        console.log(userCredential)
-    }, [userCredential])
+    async function getUser(email) {
+        try {
+            const response = await axios.get(`https://hoop-easy-production.up.railway.app/api/getUser?email=${email}`)
+            setCurrentUser(response.data)
+        } catch(err) {
+            console.error(err)
+        }
+    }
 
     return (
-    <ThemeProvider theme={theme}>
-        <Router>
-            <Routes>
-                <Route path='/' element={<SignIn props={{setUserCredentials}} />} />
-                <Route path='/homepage' element={<Homepage />} />
-                <Route path='/createAccount' element={<CreateAccount />} />
-            </Routes>
-        </Router>
-    </ThemeProvider>
+    <UserContext.Provider value={currentUser}>
+        <ThemeProvider theme={theme}>
+            <Router>
+                <Routes>
+                    <Route path='/' element={<SignIn getUser={getUser}/>} />
+                    <Route path='/homepage' element={<Homepage UserContext={UserContext}/>} />
+                    <Route path='/createAccount' element={<CreateAccount />} />
+                </Routes>
+            </Router>
+        </ThemeProvider>
+    </UserContext.Provider>
     );
 }
 

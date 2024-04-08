@@ -102,9 +102,9 @@ export default function CustomPaginationActionsTable({rows, columnNames}) {
       <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
         <TableHead>
             <TableRow>
-              {columnNames.map((column) => (
+              {columnNames.map((column) => ( 
                 <TableCell
-                  key={column}
+                  key={column.id}
                   align={column.align}
                   style={{ minWidth: column.minWidth }}
                 >
@@ -129,7 +129,7 @@ export default function CustomPaginationActionsTable({rows, columnNames}) {
                 {row.overall}
               </TableCell>
               <TableCell style={{ width: 160 }} align="right">
-                {row.winLoss}
+                {row.gamesPlayed}
               </TableCell>
               
             </TableRow>

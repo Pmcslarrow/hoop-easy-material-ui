@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import { Box, Avatar } from "@mui/material";
 import { useTheme } from "@emotion/react";
 
+// Pass in the object that contains all the information about the game
 export default function FindGameCard({ gameType }) {
   const theme = useTheme()
   const colorHashMap = {

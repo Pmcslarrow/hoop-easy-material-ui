@@ -1,9 +1,12 @@
-import { Container, Grid, Paper, Box, Typography } from "@mui/material";
-import { styled } from '@mui/material/styles';
-import { useTheme } from '@mui/material/styles';
+import React, { useEffect } from 'react'
 import useMediaQuery from '@mui/material/useMediaQuery';
 import CustomPaginationActionsTable from '../components/TablePagination'
 import FindGameCard from "../components/FindGameCard";
+import axios from 'axios';
+import { Container, Grid, Paper, Box, Typography } from "@mui/material";
+import { styled } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
+
 
 const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.h6,
@@ -14,12 +17,13 @@ const Item = styled(Paper)(({ theme }) => ({
     boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px'
 }));
 
+/**
+ * The SmallGrid is used for the two tables on the homepage. It lets you pass in data to customize the table, and have 
+   highlight attributes at the top
+ * @param {string} title
+ * @param {object} GridAttributes - { title, blockOneTitle, blockOneValue, blockTwoTitle, blockTwoValue }
+ */
 function SmallGrid({GridAttributes}) {
-    /*
-    params:
-      title - string
-      GridAttributes - { title, blockOneTitle, blockOneValue, blockTwoTitle, blockTwoValue }
-    */
     return (
         <Box sx={{ flexGrow: 1}}>
             <Typography variant="h5">{GridAttributes.title}</Typography>  
@@ -45,6 +49,10 @@ function SmallGrid({GridAttributes}) {
     )
 }
 
+/**
+ * The LargeGrid is used as the wrapper container outside of the Find a Game section
+ * @param {string} title
+ */
 function LargeGrid({title}) {
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -71,28 +79,54 @@ function LargeGrid({title}) {
     )
 }
 
-export default function Homepage() {
+/**
+ * Homepage is the top level wrapper of all functionality. It is the hub of where we will 
+ * create the structure of our page. 
+ */
+export default function Homepage({ UserContext }) {
+    const user = React.useContext(UserContext)
     const theme = useTheme();
     const isScreenSmall = useMediaQuery(theme.breakpoints.down('md'));
+    const [rankData, setRankData] = React.useState([])
+
+    useEffect(() => {
+        const getRankings = async () => {
+            const response = await axios.get("https://hoop-easy-production.up.railway.app/api/users")
+            const users = response.data
+            
+            const rankData = users.map((obj, i) => ({
+                rank: i + 1,
+                overall: obj.overall,
+                name: obj.username,
+                gamesPlayed: obj.gamesPlayed
+            })).sort((a, b) =>  parseFloat(b.overall) - parseFloat(a.overall));
+            
+            setRankData(rankData) // [ {rank: 1, overall: 99, name: 'pmcslarrow', gamesPlayed: 6} ]
+        }
+
+        getRankings()
+    }, [user])
+
+    /* Interact with the backend to get the rankings data {name, overall rating, games played} api/users */
+    /* Interact with the backend to get the games available to a user { type, date, address, time } api/myGames */
 
     function createData(name, overall, rank, winLoss) {
         return { name, overall, rank, winLoss };
     }
-    
-    const dataStatisticsRows = [
-        createData('Paul McSlarrow', 65, 4, '52-2'),
-        createData('Jack Boydell', 66, 3, '52-2'),
-        createData('Dylan Green', 60, 6, '52-2'),
-        createData('Aadem Isai', 66, 5, '52-2'),
-        createData('Josiah Frank', 69, 2, '52-2'),
-        createData('Cedric Coward', 99, 1, '52-2'),
-    ].sort((a, b) => (a.rank < b.rank ? -1 : 1));
 
+    // Defining the column names for the reusable tables
     const dataStatisticsCols = [
         { id: 1, label: 'Username', align: 'left'},
         { id: 2, label: 'Rank', align: 'right'},
         { id: 3, label: 'Overall Rating', align: 'right'},
-        { id: 4, label: 'W/L', align: 'right'},
+        { id: 4, label: 'Games Played', align: 'right'},
+    ];
+
+    const myGamesCols = [
+        { id: 1, label: 'Type', align: 'left'},
+        { id: 2, label: 'Address', align: 'right'},
+        { id: 3, label: 'Date', align: 'right'},
+        { id: 4, label: 'Time', align: 'right'},
     ];
 
     const myGamesRows = [
@@ -103,22 +137,15 @@ export default function Homepage() {
         createData('1v1', '4/8/2024', '900 State St, Salem, OR 97301, USA', '2:00 PM'),
 
     ]
-    
-    const myGamesCols = [
-        { id: 1, label: 'Type', align: 'left'},
-        { id: 2, label: 'Address', align: 'right'},
-        { id: 3, label: 'Date', align: 'right'},
-        { id: 4, label: 'Time', align: 'right'},
-    ];
 
-
+    const globalRank = rankData.find((dataPoint) => {return dataPoint?.name === user?.username})
     const AttLeft = {
         title: 'General Statistics',
         blockOneTitle: 'Overall Rating',
-        blockOneValue: '67.35',
+        blockOneValue: user?.overall,
         blockTwoTitle: 'Global Rank',
-        blockTwoValue: '1023',
-        component: <CustomPaginationActionsTable rows={dataStatisticsRows} columnNames={dataStatisticsCols}/>,
+        blockTwoValue: `${globalRank?.rank} / ${rankData?.length}`,
+        component: <CustomPaginationActionsTable rows={rankData ?? [{name: 'empty', overall: 'empty', rank: 'empty', gamesPlayed: 'empty'}]} columnNames={dataStatisticsCols}/>,
     }
 
     const AttRight = {
