@@ -16,6 +16,39 @@ import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
+import { createTeammateArrayFromJson } from '../utils/jsonFunc';
+import DialogBox from './DialogBox';
+import SubmitGameData from './SubmitGameData';
+
+
+
+const needsVerificationOrWaitForOtherTeamApproval = (user, game) => {
+    const captainsArray = createTeammateArrayFromJson(game?.captains)
+    const isCurrentUserCaptain = captainsArray.some((obj) => obj.toString() === user?.id.toString())
+    const isPendingApproval = checkIfUserIsPendingApproval(user, game)
+
+    if (isCurrentUserCaptain && isPendingApproval) {
+        return "VerificationStageComponent"
+    } else {
+        return "opponent must verify scores"
+    }
+}
+
+const checkIfUserIsPendingApproval = (user, game) => {
+    const currentUserOnTeamOne = Object.values(game?.team1).some((obj) => obj.toString() === user?.id.toString())
+
+    if (currentUserOnTeamOne) {
+        if (game?.teamOneApproval !== null) {
+            return false
+        }
+        return true
+    } else {
+        if (game?.teamTwoApproval !== null) {
+            return false
+        }
+        return true
+    }
+}
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -80,9 +113,11 @@ TablePaginationActions.propTypes = {
 
 
 
-export default function CustomPaginationActionsTable({rows, columnNames}) {
+export default function CustomPaginationActionsTable({rows, columnNames, isMyGames, user, setRefresh, refresh}) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(4);
+  const [selectedGame, setSelectedGame] = React.useState()
+  const [dialogOpen, setDialogOpen] = React.useState(false);
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -97,8 +132,25 @@ export default function CustomPaginationActionsTable({rows, columnNames}) {
     setPage(0);
   };
 
+  const handleRowClick = (game) => {
+    setSelectedGame(game)
+    if (game.col1 === 'confirmed') {
+        setDialogOpen(true)
+    }
+
+    if (game.col1 === 'verification') {
+        setDialogOpen(true)
+    }
+  }
+
+  const handleClose = () => {
+    setDialogOpen(false)
+  };
+
+
   return (
     <TableContainer component={Paper}>
+      <DialogBox Component={<SubmitGameData user={user} game={selectedGame} refresh={refresh} setRefresh={setRefresh} handleClose={handleClose}/>} dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} handleClose={handleClose}/>
       <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
         <TableHead>
             <TableRow>
@@ -118,20 +170,19 @@ export default function CustomPaginationActionsTable({rows, columnNames}) {
             ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : rows
           ).map((row) => (
-            <TableRow key={row.name}>
+            <TableRow key={row.id} onClick={() => handleRowClick(row)}>
                 <TableCell component="th" scope="row" >
-                {row.name}
-              </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
-                {row.rank}
-              </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
-                {row.overall}
-              </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
-                {row.gamesPlayed}
-              </TableCell>
-              
+                    {row.col1}
+                </TableCell>
+                <TableCell style={{ width: 160 }} align="right" >
+                    {row.col2}
+                </TableCell>
+                <TableCell style={{ width: 160 }} align="right">
+                    {row.col3}
+                </TableCell>
+                <TableCell style={{ width: 160 }} align="right">
+                    {row.col4}
+                </TableCell>
             </TableRow>
           ))}
           {emptyRows > 0 && (

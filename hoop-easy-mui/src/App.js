@@ -35,14 +35,14 @@ const theme = createTheme({
 function App() {
     const [currentUser, setCurrentUser] = React.useState()
 
-    async function getUser(email) {
+    const getUser = React.useCallback(async (email) => {
         try {
-            const response = await axios.get(`https://hoop-easy-production.up.railway.app/api/getUser?email=${email}`)
-            setCurrentUser(response.data)
+            const response = await axios.get(`https://hoop-easy-production.up.railway.app/api/getUser?email=${email}`);
+            setCurrentUser(response.data);
         } catch(err) {
-            console.error(err)
+            console.error(err);
         }
-    }
+    }, []);
 
     return (
     <UserContext.Provider value={currentUser}>
