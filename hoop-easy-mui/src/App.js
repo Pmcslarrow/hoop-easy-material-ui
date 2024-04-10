@@ -50,7 +50,7 @@ function App() {
             <Router>
                 <Routes>
                     <Route path='/' element={<SignIn getUser={getUser}/>} />
-                    <Route path='/homepage' element={<Homepage UserContext={UserContext}/>} />
+                    <Route path='/homepage' element={<Homepage UserContext={UserContext} getUser={getUser}/> } />
                     <Route path='/createAccount' element={<CreateAccount />} />
                 </Routes>
             </Router>

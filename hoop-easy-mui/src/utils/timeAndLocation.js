@@ -66,4 +66,17 @@ function getDistanceFromLatLonInMiles(lat1, lon1, lat2, lon2) {
     return deg * (Math.PI/180)
  }
 
-export { convertToLocalTime, extractDateTime, sortGamesByLocationDistance }
+ function localToUTC( localDateTimeString ) {
+    const dateObj = new Date(localDateTimeString);
+    const year = dateObj.getUTCFullYear();
+    const month = (dateObj.getUTCMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+    const day = dateObj.getUTCDate().toString().padStart(2, '0');
+    const hours = dateObj.getUTCHours().toString().padStart(2, '0');
+    const minutes = dateObj.getUTCMinutes().toString().padStart(2, '0');
+    const seconds = dateObj.getUTCSeconds().toString().padStart(2, '0');
+    const formattedUtcDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    
+    return formattedUtcDate
+}
+
+export { convertToLocalTime, extractDateTime, sortGamesByLocationDistance, localToUTC }

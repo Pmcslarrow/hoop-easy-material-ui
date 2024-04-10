@@ -16,39 +16,11 @@ import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
-import { createTeammateArrayFromJson } from '../utils/jsonFunc';
 import DialogBox from './DialogBox';
 import SubmitGameData from './SubmitGameData';
+import VerifyGame from './VerifyGame';
+import { createTeammateArrayFromJson } from '../utils/jsonFunc';
 
-
-
-const needsVerificationOrWaitForOtherTeamApproval = (user, game) => {
-    const captainsArray = createTeammateArrayFromJson(game?.captains)
-    const isCurrentUserCaptain = captainsArray.some((obj) => obj.toString() === user?.id.toString())
-    const isPendingApproval = checkIfUserIsPendingApproval(user, game)
-
-    if (isCurrentUserCaptain && isPendingApproval) {
-        return "VerificationStageComponent"
-    } else {
-        return "opponent must verify scores"
-    }
-}
-
-const checkIfUserIsPendingApproval = (user, game) => {
-    const currentUserOnTeamOne = Object.values(game?.team1).some((obj) => obj.toString() === user?.id.toString())
-
-    if (currentUserOnTeamOne) {
-        if (game?.teamOneApproval !== null) {
-            return false
-        }
-        return true
-    } else {
-        if (game?.teamTwoApproval !== null) {
-            return false
-        }
-        return true
-    }
-}
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -114,106 +86,132 @@ TablePaginationActions.propTypes = {
 
 
 export default function CustomPaginationActionsTable({rows, columnNames, isMyGames, user, setRefresh, refresh}) {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(4);
-  const [selectedGame, setSelectedGame] = React.useState()
-  const [dialogOpen, setDialogOpen] = React.useState(false);
+    const theme = useTheme()
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(4);
+    const [selectedGame, setSelectedGame] = React.useState()
+    const [selectedComponent, setSelectedComponent] = React.useState()
+    const [dialogOpen, setDialogOpen] = React.useState(false);
 
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    // Avoid a layout jump when reaching the last page with empty rows.
+    const emptyRows =
+        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
 
-  const handleRowClick = (game) => {
-    setSelectedGame(game)
-    if (game.col1 === 'confirmed') {
-        setDialogOpen(true)
+    const handleRowClick = (game) => {
+        setSelectedGame(game)
+        if (game.col1 === 'confirmed') {
+            setSelectedComponent(<SubmitGameData user={user} game={game} refresh={refresh} setRefresh={setRefresh} handleClose={handleClose}/>)
+            setDialogOpen(true)
+        }
+
+        if (game.col1 === 'verification') {
+            setSelectedComponent(<VerifyGame user={user} game={game} refresh={refresh} setRefresh={setRefresh} handleClose={handleClose}re/>)
+            setDialogOpen(true)
+        }
     }
 
-    if (game.col1 === 'verification') {
-        setDialogOpen(true)
+    const handleClose = () => {
+        setDialogOpen(false)
+    };
+
+    const createUsefulSentence = (status) => {
+        switch(status) {
+            case 'pending':
+                return 'Waiting for people to join'
+            case 'confirmed':
+                return 'Click to submit scores'
+            case 'verification':
+                return 'Click to verify the game'
+            default:
+                return status
+        }
     }
-  }
+    
 
-  const handleClose = () => {
-    setDialogOpen(false)
-  };
-
-
-  return (
-    <TableContainer component={Paper}>
-      <DialogBox Component={<SubmitGameData user={user} game={selectedGame} refresh={refresh} setRefresh={setRefresh} handleClose={handleClose}/>} dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} handleClose={handleClose}/>
-      <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
-        <TableHead>
-            <TableRow>
-              {columnNames.map((column) => ( 
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
+    return (
+        <TableContainer component={Paper}>
+        <DialogBox Component={selectedComponent} dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} handleClose={handleClose}/>
+        <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
+            <TableHead>
+                <TableRow>
+                {columnNames.map((column) => ( 
+                    <TableCell
+                    key={column.id}
+                    align={column.align}
+                    style={{ minWidth: column.minWidth }}
+                    >
+                    {column.label}
+                    </TableCell>
+                ))}
+                </TableRow>
+            </TableHead>
+            <TableBody>
+            {(rowsPerPage > 0
+                ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                : rows
+            ).map((row) => (
+                <TableRow
+                    sx={{
+                    cursor: 'pointer',
+                    '&:hover': {
+                        backgroundColor: theme.palette.secondary.lightBlue,
+                    },
+                    }}
+                    key={row.id}
+                    onClick={() => handleRowClick(row)}
                 >
-                  {column.label}
-                </TableCell>
-              ))}
+                    <TableCell component="th" scope="row" >
+                        {isMyGames ? createUsefulSentence(row.col1) : row.col1}
+                    </TableCell>
+                    <TableCell style={{ width: 160 }} align="right" >
+                        {row.col2}
+                    </TableCell>
+                    <TableCell style={{ width: 160 }} align="right">
+                        {row.col3}
+                    </TableCell>
+                    <TableCell style={{ width: 160 }} align="right">
+                        {row.col4}
+                    </TableCell>
+                </TableRow>
+            ))}
+            {emptyRows > 0 && (
+                <TableRow style={{ height: 53 * emptyRows }}>
+                <TableCell colSpan={6} />
+                </TableRow>
+            )}
+            </TableBody>
+            <TableFooter>
+            <TableRow>
+                <TablePagination
+                rowsPerPageOptions={[5]}
+                colSpan={3}
+                count={rows.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                slotProps={{
+                    select: {
+                    inputProps: {
+                        'aria-label': 'rows per page',
+                    },
+                    native: true,
+                    },
+                }}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                ActionsComponent={TablePaginationActions}
+                />
             </TableRow>
-          </TableHead>
-        <TableBody>
-          {(rowsPerPage > 0
-            ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : rows
-          ).map((row) => (
-            <TableRow key={row.id} onClick={() => handleRowClick(row)}>
-                <TableCell component="th" scope="row" >
-                    {row.col1}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="right" >
-                    {row.col2}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="right">
-                    {row.col3}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="right">
-                    {row.col4}
-                </TableCell>
-            </TableRow>
-          ))}
-          {emptyRows > 0 && (
-            <TableRow style={{ height: 53 * emptyRows }}>
-              <TableCell colSpan={6} />
-            </TableRow>
-          )}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              rowsPerPageOptions={[5]}
-              colSpan={3}
-              count={rows.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              slotProps={{
-                select: {
-                  inputProps: {
-                    'aria-label': 'rows per page',
-                  },
-                  native: true,
-                },
-              }}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              ActionsComponent={TablePaginationActions}
-            />
-          </TableRow>
-        </TableFooter>
-      </Table>
-    </TableContainer>
-  );
+            </TableFooter>
+        </Table>
+        </TableContainer>
+    );
 }

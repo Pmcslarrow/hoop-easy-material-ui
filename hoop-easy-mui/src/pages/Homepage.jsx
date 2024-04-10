@@ -80,7 +80,7 @@ function LargeGrid({title, user, availableGames, refresh, setRefresh }) {
  * Homepage is the top level wrapper of all functionality. It is the hub of where we will 
  * create the structure of our page. 
  */
-export default function Homepage({ UserContext }) {
+export default function Homepage({ UserContext, getUser }) {
     const navigate = useNavigate()
     const user = React.useContext(UserContext)
     const theme = useTheme();
@@ -136,10 +136,14 @@ export default function Homepage({ UserContext }) {
         availableGames()
     }, [user, refresh])
 
+    // This should ONLY ever update when we refresh manually. Meaning the user updated information that could affect the overall score
+    React.useEffect(() => {
+        getUser(user?.email)
+    }, [refresh])
+
     if (!user) {
         navigate('/')
     }
-
 
     /* This section looks confusing but just defines the structure for the table (header names and card values) */
     const dataStatisticsCols = [
@@ -187,7 +191,6 @@ export default function Homepage({ UserContext }) {
         component: <CustomPaginationActionsTable rows={myGames ?? [{name: 'empty', overall: 'empty', rank: 'empty', gamesPlayed: 'empty'}]} columnNames={myGamesCols} isMyGames={true} user={user} setRefresh={setRefresh} refresh={refresh}/>,
     }
 
-    console.log(myGames)
     return (
         <>
         <Container maxWidth="xl" sx={isScreenSmall ? {} : { display: 'flex', gap: '75px'}} >
