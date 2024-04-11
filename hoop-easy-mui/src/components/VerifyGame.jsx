@@ -69,6 +69,7 @@ export default function VerifyGame({user, game, refresh, setRefresh, handleClose
             )
 
             await removeGameInstance(game?.game.gameID)
+        
         } else {   
             // else this is the first team to accept the game. So we update the status the teams' approval raiting to TRUE
             if (isUserOnTeamOne) {
@@ -90,13 +91,13 @@ export default function VerifyGame({user, game, refresh, setRefresh, handleClose
     const updateTeamOverallRatings = async (team, delta) => {
         await axios.put(`https://hoop-easy-production.up.railway.app/api/updateTeamOverallRatings?overallChange=${delta}`, {
             params : {
-                values: Object.values(team).join(',')
+                values: Object.values(team)
             }
         })
     }
 
     const updateTeamHistory = async (team, when, who, where, what, rating) => {
-        const currentTeam = Array(Object.values(team).join(','))
+        const currentTeam = Object.values(team)
         const data = {
             team: currentTeam,
             when,
@@ -130,7 +131,7 @@ export default function VerifyGame({user, game, refresh, setRefresh, handleClose
         return (
         <Box sx={{padding: 3}}>
             <Typography>
-                    You have already submitted the scores for the game. 
+                    You (or your team captain) already submitted the scores for the game. 
                     Please wait for or notify the other team captain to 
                     confirm the scores of the game.
             </Typography>

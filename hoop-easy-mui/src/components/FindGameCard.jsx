@@ -76,12 +76,15 @@ export default function FindGameCard({ game, user, refresh, setRefresh }) {
   }
 
   let { date, time } = extractDateTime(game?.time)
+  let numberOfPlayersJoined = Object.values(game.teammates).length
+  let maxNumberOfPlayers = parseInt(game?.gameType * 2)
+  let playersNeeded = maxNumberOfPlayers - numberOfPlayersJoined
 
   return (
     <Card>
         <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 1, backgroundColor: colorHashMap[game.gameType]}}>
             <Avatar sx={{margin: 1, backgroundColor: 'white', color: 'black'}}>{game.gameType}v{game.gameType}</Avatar>
-            <Typography sx={{color: 'white'}}>{game?.distance.toFixed(2)} Miles</Typography>
+            <Typography sx={{color: 'white', margin: 1}}>Spots left: {playersNeeded}</Typography>
         </Box>
         <CardContent>
             <Typography gutterBottom variant="h5" component="div">
@@ -93,6 +96,8 @@ export default function FindGameCard({ game, user, refresh, setRefresh }) {
             <Typography variant="body2" color="text.secondary">
                 {game.address}
             </Typography>
+            <br />
+            <Typography variant="body2">{game?.distance.toFixed(2)} Miles</Typography>
         </CardContent>
         <CardActions>
             <Button 

@@ -135,7 +135,6 @@ export default function CustomPaginationActionsTable({rows, columnNames, isMyGam
                 return status
         }
     }
-    
 
     return (
         <TableContainer component={Paper}>
@@ -160,12 +159,12 @@ export default function CustomPaginationActionsTable({rows, columnNames, isMyGam
                 : rows
             ).map((row) => (
                 <TableRow
-                    sx={{
-                    cursor: 'pointer',
-                    '&:hover': {
-                        backgroundColor: theme.palette.secondary.lightBlue,
-                    },
-                    }}
+                    {...(isMyGames ? { sx: {
+                        cursor: 'pointer',
+                        '&:hover': {
+                            backgroundColor: theme.palette.secondary.lightBlue,
+                        },
+                    }} : {})}
                     key={row.id}
                     onClick={() => handleRowClick(row)}
                 >
