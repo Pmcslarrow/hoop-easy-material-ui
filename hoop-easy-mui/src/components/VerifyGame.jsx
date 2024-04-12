@@ -86,6 +86,7 @@ export default function VerifyGame({user, game, refresh, setRefresh, handleClose
         await updateDeniedGames()
         await removeGameInstance(game?.game.gameID)
         setRefresh(refresh + 1)
+        handleClose()
     }
 
     const updateTeamOverallRatings = async (team, delta) => {
@@ -148,7 +149,7 @@ export default function VerifyGame({user, game, refresh, setRefresh, handleClose
             <br />
             <Box sx={{display: 'flex', gap: 2}}>
                 <Button variant='contained' onClick={handleAccept}>Accept</Button>
-                <Button variant='contained'>Deny</Button>
+                <Button variant='contained' onClick={handleDeny}>Deny</Button>
             </Box>
         </Box>
     )
