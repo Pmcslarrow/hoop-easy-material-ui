@@ -3,11 +3,13 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import CustomPaginationActionsTable from '../components/TablePagination'
 import FindGameCard from "../components/FindGameCard";
 import axios from 'axios';
+import DialogBox from '../components/DialogBox';
 import { convertToLocalTime, extractDateTime, sortGamesByLocationDistance } from '../utils/timeAndLocation';
-import { Container, Grid, Paper, Box, Typography } from "@mui/material";
+import { Container, Grid, Paper, Box, Typography, Button, Avatar } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import CreateGameForm from '../components/CreateGameForm';
 
 // GLOBALS
 const Item = styled(Paper)(({ theme }) => ({
@@ -89,6 +91,7 @@ export default function Homepage({ UserContext, getUser }) {
     const [myGames, setMyGames] = React.useState([])
     const [availableGames, setAvailableGames] = React.useState([])
     const [refresh, setRefresh] = React.useState(0)
+    const [dialogOpen, setDialogOpen] = React.useState(false)
 
     useEffect(() => {
         const getRankings = async () => {
@@ -97,7 +100,7 @@ export default function Homepage({ UserContext, getUser }) {
                     const users = res.data
                     const rankData = users.map((obj, i) => {
                         return { col1: obj.username, col2: i + 1, col3: obj.overall, col4: obj.gamesPlayed, col5: obj.id }
-                    }).sort((a, b) =>  parseFloat(b.overall) - parseFloat(a.overall));
+                    }).sort((a, b) =>  parseFloat(b.col3) - parseFloat(a.col3));
                     setRankData(rankData) // [ {rank: 1, overall: 99, name: 'pmcslarrow', gamesPlayed: 6} ]
                 })
                 .catch((err) => {
@@ -191,25 +194,37 @@ export default function Homepage({ UserContext, getUser }) {
         component: <CustomPaginationActionsTable rows={myGames ?? [{name: 'empty', overall: 'empty', rank: 'empty', gamesPlayed: 'empty'}]} columnNames={myGamesCols} isMyGames={true} user={user} setRefresh={setRefresh} refresh={refresh}/>,
     }
 
+    const handleClose = () => {
+        setDialogOpen(false)
+    };
+
     return (
         <>
-        <Container maxWidth="xl" sx={isScreenSmall ? {} : { display: 'flex', gap: '75px'}} >
-            <SmallGrid GridAttributes={AttLeft}></SmallGrid>  
-            {isScreenSmall ? <br /> : ''} 
-            <SmallGrid GridAttributes={AttRight}></SmallGrid>             
+        <Container>
+            <DialogBox Component={<CreateGameForm user={user}/>} dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} handleClose={handleClose}/>
+            <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+                <Avatar>{user?.username[0]?.toUpperCase()}</Avatar>
+                <Button variant='contained' onClick={() => setDialogOpen(!dialogOpen)}>Create Game</Button>
+            </Box>  
+            <br/>
+            <Container maxWidth="xl" sx={isScreenSmall ? {} : { display: 'flex', gap: '75px'}} >
+                <SmallGrid GridAttributes={AttLeft}></SmallGrid>  
+                {isScreenSmall ? <br /> : ''} 
+                <SmallGrid GridAttributes={AttRight}></SmallGrid>             
+            </Container>
+            <br />
+            <Container maxWidth='xl' >
+                <LargeGrid 
+                    title={'Find a Game'} 
+                    availableGames={availableGames} 
+                    user={user} 
+                    refresh={refresh}
+                    setRefresh={setRefresh}
+                    large={true}
+                ></LargeGrid>
+            </Container>
+            <br />
         </Container>
-        <br />
-        <Container maxWidth='xl' >
-            <LargeGrid 
-                title={'Find a Game'} 
-                availableGames={availableGames} 
-                user={user} 
-                refresh={refresh}
-                setRefresh={setRefresh}
-                large={true}
-            ></LargeGrid>
-        </Container>
-        <br />
         </>
     )
 }

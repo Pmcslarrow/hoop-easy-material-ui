@@ -142,9 +142,9 @@ export default function CustomPaginationActionsTable({rows, columnNames, isMyGam
         <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
             <TableHead>
                 <TableRow>
-                {columnNames.map((column) => ( 
+                {columnNames.map((column, i) => ( 
                     <TableCell
-                    key={column.id}
+                    key={Math.random().toString(16).slice(2)}
                     align={column.align}
                     style={{ minWidth: column.minWidth }}
                     >
@@ -165,7 +165,7 @@ export default function CustomPaginationActionsTable({rows, columnNames, isMyGam
                             backgroundColor: theme.palette.secondary.lightBlue,
                         },
                     }} : {})}
-                    key={row.id}
+                    key={Math.random().toString(16).slice(2)}
                     onClick={() => handleRowClick(row)}
                 >
                     <TableCell component="th" scope="row" >

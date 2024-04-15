@@ -45,17 +45,18 @@ function App() {
     }, []);
 
     return (
-    <UserContext.Provider value={currentUser}>
-        <ThemeProvider theme={theme}>
-            <Router>
-                <Routes>
-                    <Route path='/' element={<SignIn getUser={getUser}/>} />
-                    <Route path='/homepage' element={<Homepage UserContext={UserContext} getUser={getUser}/> } />
-                    <Route path='/createAccount' element={<CreateAccount />} />
-                </Routes>
-            </Router>
-        </ThemeProvider>
-    </UserContext.Provider>
+        <UserContext.Provider value={currentUser}>
+            <ThemeProvider theme={theme}>
+                <Router>
+                    <Routes>
+                        <Route path='/' element={<SignIn getUser={getUser}/>} />
+                        <Route path='/homepage' element={<Homepage UserContext={UserContext} getUser={getUser}/> } />
+                        <Route path='/createAccount' element={<CreateAccount />} />
+                    </Routes>
+                </Router>
+            </ThemeProvider>
+        </UserContext.Provider>
+    
     );
 }
 
