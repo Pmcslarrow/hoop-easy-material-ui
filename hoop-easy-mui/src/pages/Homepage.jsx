@@ -26,7 +26,7 @@ const Item = styled(Paper)(({ theme }) => ({
  * The SmallGrid is used for the two tables on the homepage. It lets you pass in data to customize the table, and have 
    highlight attributes at the top
  * @param {string} title
- * @param {object} GridAttributes - { title, blockOneTitle, blockOneValue, blockTwoTitle, blockTwoValue }
+ * @param {object} GridAttributes - { title, blockOneTitle, blockOneValue, blockTwoTitle, blockTwoValue, component }
  */
 function SmallGrid({GridAttributes}) {
     return (
@@ -145,7 +145,7 @@ export default function Homepage({ UserContext, getUser }) {
     
 
     // This should ONLY ever update when we refresh manually. Meaning the user updated information that could affect the overall score
-    React.useEffect(() => {
+    useEffect(() => {
         getUser(user?.email)
     }, [refresh])
 
