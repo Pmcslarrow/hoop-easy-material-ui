@@ -106,13 +106,21 @@ export default function Homepage({ UserContext, getUser }) {
                 ]);
     
                 const users = rankDataResponse.data;
-                const rankData = users.map((obj, i) => ({
-                    col1: obj.username,
-                    col2: i + 1,
-                    col3: obj.overall,
-                    col4: obj.gamesPlayed,
-                    col5: obj.id
-                })).sort((a, b) => parseFloat(b.col3) - parseFloat(a.col3));
+                const rankData = users
+                    .map(obj => ({
+                        col1: obj.username,
+                        col3: obj.overall,
+                        col4: obj.gamesPlayed,
+                        col5: obj.id
+                    }))
+                    .sort((a, b) => parseFloat(b.col3) - parseFloat(a.col3))
+                    .map((obj, index) => ({
+                        col1: obj.col1,
+                        col2: index + 1,
+                        col3: obj.col3,
+                        col4: obj.col4,
+                        col5: obj.col5
+                    }));
                 setRankData(rankData);
     
                 const games = myGamesResponse.data;
@@ -212,7 +220,7 @@ export default function Homepage({ UserContext, getUser }) {
         <Container>
             <DialogBox Component={<CreateGameForm user={user} handleClose={handleClose} refresh={refresh} setRefresh={setRefresh}/>} dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} handleClose={handleClose}/>
             <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
-                <Avatar>{user?.username[0]?.toUpperCase()}</Avatar>
+                <Avatar sx={{backgroundColor: theme.palette.primary.main}}>{user?.username[0]?.toUpperCase()}</Avatar>
                 <Button variant='contained' onClick={() => setDialogOpen(!dialogOpen)}>Create Game</Button>
             </Box>  
             <br/>
