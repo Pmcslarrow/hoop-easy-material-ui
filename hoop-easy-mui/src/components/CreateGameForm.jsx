@@ -5,7 +5,7 @@ import { localToUTC } from '../utils/timeAndLocation';
 import LocationSearchInput from './GoogleNavigation';
 import axios from 'axios';
 
-const CreateGameForm = ({ user }) => {
+const CreateGameForm = ({ user, handleClose, refresh, setRefresh }) => {
     const [address, setAddress] = useState('');
     const [formData, setFormData] = useState({
         date: '',
@@ -34,12 +34,8 @@ const CreateGameForm = ({ user }) => {
             console.log(address)
             console.log(coordinates)
             console.log(formData.date, formData.time, formData.gameType)
-            /*
-            const address = value.label
-            const placeID = value.value.place_id
+    
             const { date, time, gameType } = formData
-
-            console.log(address, placeID)
             const playerID = user?.id;
             const userDateTime = new Date(`${date} ${time}`);
             const dateOfGame = localToUTC(userDateTime)
@@ -54,17 +50,20 @@ const CreateGameForm = ({ user }) => {
             
             const data = {
                 userID: playerID,
-                address: addressString,
-                longitude: coordinates.longitude,
-                latitude: coordinates.latitude,
+                address: address,
+                longitude: coordinates.long,
+                latitude: coordinates.lat,
                 dateOfGame: dateOfGame,
                 timeOfGame: time,
                 gameType,
                 playerCreatedID: playerID,
                 userTimeZone,
             };
-            */
-            //handleClose()
+            
+            
+            axios.post('https://hoop-easy-production.up.railway.app/api/newGame', data)
+            setRefresh(refresh + 1)
+            handleClose()
         }
     }
 

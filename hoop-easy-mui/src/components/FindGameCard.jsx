@@ -1,4 +1,4 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -13,10 +13,10 @@ import { createTeammateArrayFromJson, createTeammateJsonFromArray } from "../uti
 
 // Pass in the object that contains all the information about the game
 export default function FindGameCard({ game, user, refresh, setRefresh }) {
-    const [isUserAlreadyInsideGame, setUserAlreadyInAGame] = React.useState(false)
-    const [open, setOpen] = React.useState(false);
+    const [isUserAlreadyInsideGame, setUserAlreadyInAGame] = useState(false)
+    const [open, setOpen] = useState(false);
 
-    React.useEffect(() => {
+    useEffect(() => {
         const isTeammateInGame = () => {
             let result = Object.values(game?.teammates).find((value) => value === user.id.toString())
             if (result === undefined || result === null) {

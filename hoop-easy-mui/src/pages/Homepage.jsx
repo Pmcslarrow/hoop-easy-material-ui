@@ -5,7 +5,7 @@ import FindGameCard from "../components/FindGameCard";
 import axios from 'axios';
 import DialogBox from '../components/DialogBox';
 import { convertToLocalTime, extractDateTime, sortGamesByLocationDistance } from '../utils/timeAndLocation';
-import { Container, Grid, Paper, Box, Typography, Button, Avatar } from "@mui/material";
+import { Container, Grid, Paper, Box, Typography, Button, Avatar, Alert } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
@@ -92,52 +92,57 @@ export default function Homepage({ UserContext, getUser }) {
     const [availableGames, setAvailableGames] = React.useState([])
     const [refresh, setRefresh] = React.useState(0)
     const [dialogOpen, setDialogOpen] = React.useState(false)
+    const [isLoading, setLoading] = React.useState(false)
 
     useEffect(() => {
-        const getRankings = async () => {
-            await axios.get("https://hoop-easy-production.up.railway.app/api/users")
-                .then((res) => {
-                    const users = res.data
-                    const rankData = users.map((obj, i) => {
-                        return { col1: obj.username, col2: i + 1, col3: obj.overall, col4: obj.gamesPlayed, col5: obj.id }
-                    }).sort((a, b) =>  parseFloat(b.col3) - parseFloat(a.col3));
-                    setRankData(rankData) // [ {rank: 1, overall: 99, name: 'pmcslarrow', gamesPlayed: 6} ]
-                })
-                .catch((err) => {
-                    console.error(err)
-                })
-        }
-
-        const getMyGames = async () => {
-            await axios.get(`https://hoop-easy-production.up.railway.app/api/myGames?userID=${user?.id}`)
-                .then((res) => {
-                    const games = res.data
-                    const myGames = games.map((obj, i) => {
-                        const convertedDateTime = convertToLocalTime(obj?.dateOfGameInUTC)
-                        const { date, time } = extractDateTime(convertedDateTime)
-                        return { col1: obj.status, col2: obj.address, col3: date, col4: time, col5: obj.gameID, game: obj }
-                    })
-                    setMyGames(myGames) // {col1: 1, col2: '900 State St, Salem, OR 97301, USA', col3: '4/8/2024', col4: ' 2:20:00 PM', id: 63 }
-                })
-                .catch((err) => {
-                    console.error(err)
-                })
-        }
-
-        const availableGames = async () => {
-            await axios.get('https://hoop-easy-production.up.railway.app/api/availableGames')
-                .then(async (res) => {
-                    const sortedGames = await sortGamesByLocationDistance(res.data);
-                    setAvailableGames(sortedGames) // {gameID: 65, userID: 1, address: '2065 Myrtle Ave NE, Salem, OR 97301, USA', longitude: '-123.0214361', latitude: '44.9575788', …}
-                })
-                .catch((err) => {
-                    console.error(err)
-                })
-        }
-        getRankings()
-        getMyGames()
-        availableGames()
-    }, [user, refresh])
+        const fetchData = async () => {
+            try {
+                setLoading(true);
+    
+                const [rankDataResponse, myGamesResponse, availableGamesResponse] = await Promise.all([
+                    axios.get("https://hoop-easy-production.up.railway.app/api/users"),
+                    axios.get(`https://hoop-easy-production.up.railway.app/api/myGames?userID=${user?.id}`),
+                    axios.get('https://hoop-easy-production.up.railway.app/api/availableGames')
+                ]);
+    
+                const users = rankDataResponse.data;
+                const rankData = users.map((obj, i) => ({
+                    col1: obj.username,
+                    col2: i + 1,
+                    col3: obj.overall,
+                    col4: obj.gamesPlayed,
+                    col5: obj.id
+                })).sort((a, b) => parseFloat(b.col3) - parseFloat(a.col3));
+                setRankData(rankData);
+    
+                const games = myGamesResponse.data;
+                const myGames = games.map((obj, i) => {
+                    const convertedDateTime = convertToLocalTime(obj?.dateOfGameInUTC);
+                    const { date, time } = extractDateTime(convertedDateTime);
+                    return {
+                        col1: obj.status,
+                        col2: obj.address,
+                        col3: date,
+                        col4: time,
+                        col5: obj.gameID,
+                        game: obj
+                    };
+                });
+                setMyGames(myGames);
+    
+                const sortedGames = await sortGamesByLocationDistance(availableGamesResponse.data);
+                setAvailableGames(sortedGames);
+    
+                setLoading(false);
+            } catch (error) {
+                console.error(error);
+                setLoading(false);
+            }
+        };
+    
+        fetchData();
+    }, [user, refresh]);
+    
 
     // This should ONLY ever update when we refresh manually. Meaning the user updated information that could affect the overall score
     React.useEffect(() => {
@@ -146,6 +151,10 @@ export default function Homepage({ UserContext, getUser }) {
 
     if (!user) {
         navigate('/')
+    }
+
+    if (isLoading) {
+        return <Alert>Loading...</Alert>
     }
 
     /* This section looks confusing but just defines the structure for the table (header names and card values) */
@@ -201,7 +210,7 @@ export default function Homepage({ UserContext, getUser }) {
     return (
         <>
         <Container>
-            <DialogBox Component={<CreateGameForm user={user}/>} dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} handleClose={handleClose}/>
+            <DialogBox Component={<CreateGameForm user={user} handleClose={handleClose} refresh={refresh} setRefresh={setRefresh}/>} dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} handleClose={handleClose}/>
             <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
                 <Avatar>{user?.username[0]?.toUpperCase()}</Avatar>
                 <Button variant='contained' onClick={() => setDialogOpen(!dialogOpen)}>Create Game</Button>
