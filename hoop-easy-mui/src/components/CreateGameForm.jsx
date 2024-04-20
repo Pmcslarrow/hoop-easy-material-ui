@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Box, Button, Menu, MenuItem, Select, Typography } from '@mui/material';
 import { Input as BaseInput } from '@mui/base/Input';
 import { localToUTC } from '../utils/timeAndLocation';

@@ -68,11 +68,11 @@ export default function FindGameCard({ game, user, refresh, setRefresh }) {
 
   const theme = useTheme()
   const colorHashMap = {
-    1: theme.palette.secondary.main,
-    2: theme.palette.secondary.darkBlue,
-    3: theme.palette.secondary.lightBlue,
-    4: theme.palette.secondary.lightRed,
-    5: theme.palette.secondary.red
+    1: theme.palette.primary.light,
+    2: theme.palette.primary.lightMed,
+    3: theme.palette.primary.main,
+    4: theme.palette.primary.darkMed,
+    5: theme.palette.primary.dark,
   }
 
   let { date, time } = extractDateTime(game?.time)
@@ -81,7 +81,7 @@ export default function FindGameCard({ game, user, refresh, setRefresh }) {
   let playersNeeded = maxNumberOfPlayers - numberOfPlayersJoined
 
   return (
-    <Card>
+    <Card sx={{boxShadow: '1px 1px 5px 1px rgba(0,0,0,0.2)'}}>
         <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 1, backgroundColor: colorHashMap[game.gameType]}}>
             <Avatar sx={{margin: 1, backgroundColor: 'white', color: 'black'}}>{game.gameType}v{game.gameType}</Avatar>
             <Typography sx={{color: 'white', margin: 1}}>Spots left: {playersNeeded}</Typography>
@@ -101,7 +101,7 @@ export default function FindGameCard({ game, user, refresh, setRefresh }) {
         </CardContent>
         <CardActions>
             <Button 
-                sx={{color: colorHashMap[game.gameType]}} 
+                sx={{color: theme.palette.primary.main}} 
                 onClick={isUserAlreadyInsideGame ? handleLeaveGame : handleJoinGame}>
                 {isUserAlreadyInsideGame ? 'Leave Game' : 'Join Game'}
             </Button>

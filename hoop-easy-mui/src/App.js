@@ -6,8 +6,9 @@ import Homepage from './pages/Homepage';
 import axios from 'axios';
 import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material';
-
+import { orange, indigo, grey } from '@mui/material/colors';
 const UserContext = React.createContext()
+/*
 const theme = createTheme({
     palette: {
         primary: {
@@ -21,6 +22,43 @@ const theme = createTheme({
             lightRed: '#ee747e',
             red: '#e63946'
           },
+    },
+    typography: {
+        fontFamily: 'Quicksand',
+        fontWeightLight: 400,
+        fontWeightRegular: 500,
+        fontWeightMedium: 600,
+        fontWeightBold: 700
+    },
+    spacing: 10,
+})
+*/
+
+const theme = createTheme({
+    palette: {
+        primary: {
+            main: orange[500],
+            lightest: orange[100],
+            light: orange[200],
+            lightMed: orange[300],
+            darkMed: orange[700],
+            dark: orange[900],
+            contrastText: '#fff',
+        },
+        secondary: {
+            main: indigo[500],
+            darkBlue: '#457b9d',
+            lightBlue: '#a8dadc',
+            lightRed: '#ee747e',
+            red: '#e63946'
+        },
+        grayscale: {
+            light: grey[100],
+            lightMed: grey[300],
+            main: grey[500],
+            darkMed: grey[700],
+            dark: grey[900]
+        }
     },
     typography: {
         fontFamily: 'Quicksand',

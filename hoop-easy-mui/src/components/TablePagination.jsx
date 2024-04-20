@@ -19,7 +19,6 @@ import LastPageIcon from '@mui/icons-material/LastPage';
 import DialogBox from './DialogBox';
 import SubmitGameData from './SubmitGameData';
 import VerifyGame from './VerifyGame';
-import { createTeammateArrayFromJson } from '../utils/jsonFunc';
 
 
 function TablePaginationActions(props) {
@@ -137,7 +136,7 @@ export default function CustomPaginationActionsTable({rows, columnNames, isMyGam
     }
 
     return (
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} sx={{boxShadow: '1px 1px 5px 1px rgba(0,0,0,0.2)'}}>
         <DialogBox Component={selectedComponent} dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} handleClose={handleClose}/>
         <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
             <TableHead>
@@ -159,13 +158,8 @@ export default function CustomPaginationActionsTable({rows, columnNames, isMyGam
                 : rows
             ).map((row) => (
                 <TableRow
-                    {...(isMyGames ? { sx: {
-                        cursor: 'pointer',
-                        '&:hover': {
-                            backgroundColor: theme.palette.secondary.lightBlue,
-                        },
-                    }} : {})}
                     key={Math.random().toString(16).slice(2)}
+                    id = {isMyGames ? 'myGamesRow' : {}}
                     onClick={() => handleRowClick(row)}
                 >
                     <TableCell component="th" scope="row" >

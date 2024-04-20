@@ -3,3 +3,8 @@
 html {
     height: 100%;
 }
+
+#myGamesRow:hover {
+    cursor: pointer;
+    background-color: #ffe0b2
+}

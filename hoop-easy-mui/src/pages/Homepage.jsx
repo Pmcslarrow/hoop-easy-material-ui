@@ -10,6 +10,7 @@ import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import CreateGameForm from '../components/CreateGameForm';
+import GoogleMap from '../components/Map';
 
 // GLOBALS
 const Item = styled(Paper)(({ theme }) => ({
@@ -18,7 +19,7 @@ const Item = styled(Paper)(({ theme }) => ({
     textAlign: 'left',
     color: theme.palette.primary.contrastText,
     backgroundColor: theme.palette.primary.main,
-    boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px'
+    boxShadow: '3px 3px 5px 1px rgba(0,0,0,0.2)'
 }));
 
 
@@ -35,7 +36,7 @@ function SmallGrid({GridAttributes}) {
             <br />
             <Grid container spacing={1}>
                 <Grid item xs={4}>
-                    <Item>
+                    <Item> 
                         <Typography variant="body2">{GridAttributes.blockOneTitle}</Typography>
                         {GridAttributes.blockOneValue}
                     </Item>
@@ -239,6 +240,17 @@ export default function Homepage({ UserContext, getUser }) {
                     setRefresh={setRefresh}
                     large={true}
                 ></LargeGrid>
+            </Container>
+            <br />
+            <Container>
+                <Box sx={{ flexGrow: 1, width: '100%', height: '50vh', marginBottom: '100px'}}>
+                    <Typography variant="h5">Game Map</Typography>  
+                    <br />
+                    <GoogleMap 
+                        availableGames={availableGames}
+                        style={{ width: '100%', height: '100%'}}
+                    />
+                </Box>   
             </Container>
             <br />
         </Container>
