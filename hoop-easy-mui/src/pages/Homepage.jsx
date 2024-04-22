@@ -5,7 +5,7 @@ import FindGameCard from "../components/FindGameCard";
 import axios from 'axios';
 import DialogBox from '../components/DialogBox';
 import { convertToLocalTime, extractDateTime, sortGamesByLocationDistance } from '../utils/timeAndLocation';
-import { Container, Grid, Paper, Box, Typography, Button, Avatar, Alert } from "@mui/material";
+import { Container, Grid, Paper, Box, Typography, Button, Avatar, Alert, setRef } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
@@ -233,7 +233,7 @@ export default function Homepage({ UserContext, getUser }) {
             <br />
             <Container maxWidth='xl' >
                 <LargeGrid 
-                    title={'Find a Game'} 
+                    title={'Find a Game (List)'} 
                     availableGames={availableGames} 
                     user={user} 
                     refresh={refresh}
@@ -244,10 +244,15 @@ export default function Homepage({ UserContext, getUser }) {
             <br />
             <Container>
                 <Box sx={{ flexGrow: 1, width: '100%', height: '50vh', marginBottom: '100px'}}>
-                    <Typography variant="h5">Game Map</Typography>  
+                    <Typography variant="h5">Find a Game (Map)</Typography>  
                     <br />
+                    <Typography variant='subtitle2' sx={{color: '#457b9d'}}>Your Location</Typography>
+                    <Typography variant='subtitle2' sx={{color: '#ff9800'}}>Games</Typography>
                     <GoogleMap 
                         availableGames={availableGames}
+                        user={user}
+                        refresh={refresh}
+                        setRefresh={setRefresh}
                         style={{ width: '100%', height: '100%'}}
                     />
                 </Box>   

@@ -38,11 +38,14 @@ const theme = createTheme({
     palette: {
         primary: {
             main: orange[500],
-            lightest: orange[100],
-            light: orange[200],
-            lightMed: orange[300],
-            darkMed: orange[700],
-            dark: orange[900],
+            orange_100: orange[100],
+            orange_200: orange[200],
+            orange_300: orange[300],
+            orange_400: orange[400],
+            orange_600: orange[600],
+            orange_700: orange[700],
+            orange_800: orange[800],
+            dark: orange[700],
             contrastText: '#fff',
         },
         secondary: {

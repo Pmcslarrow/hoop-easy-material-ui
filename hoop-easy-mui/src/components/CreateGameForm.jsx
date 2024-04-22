@@ -63,6 +63,7 @@ const CreateGameForm = ({ user, handleClose, refresh, setRefresh }) => {
             
             axios.post('https://hoop-easy-production.up.railway.app/api/newGame', data)
             setRefresh(refresh + 1)
+            
             handleClose()
         }
     }
