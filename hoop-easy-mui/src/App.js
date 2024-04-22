@@ -7,6 +7,7 @@ import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material';
 import { orange, indigo, grey } from '@mui/material/colors';
 const UserContext = React.createContext()
+const MapContext = React.createContext()
 
 const theme = createTheme({
     palette: {
@@ -47,6 +48,11 @@ const theme = createTheme({
     spacing: 10,
 })
 
+/***
+ * map api key needs to be passed into the <GoogleMap /> either as a prop or a context
+ * 
+ * 
+ */
 
 function App() {
     const [currentUser, setCurrentUser] = React.useState()
@@ -60,18 +66,19 @@ function App() {
     }, []);
 
     return (
-        <UserContext.Provider value={currentUser}>
-            <ThemeProvider theme={theme}>
-                <Router>
-                    <Routes>
-                        <Route path='/' element={<SignIn getUser={getUser}/>} />
-                        <Route path='/homepage' element={<Homepage UserContext={UserContext} getUser={getUser}/> } />
-                        <Route path='/createAccount' element={<CreateAccount />} />
-                    </Routes>
-                </Router>
-            </ThemeProvider>
-        </UserContext.Provider>
-    
+        <MapContext.Provider value={process.env.REACT_APP_GOOGLE_API}>
+            <UserContext.Provider value={currentUser}>
+                <ThemeProvider theme={theme}>
+                    <Router>
+                        <Routes>
+                            <Route path='/' element={<SignIn getUser={getUser}/>} />
+                            <Route path='/homepage' element={<Homepage UserContext={UserContext} MapContext={MapContext} getUser={getUser}/> } />
+                            <Route path='/createAccount' element={<CreateAccount />} />
+                        </Routes>
+                    </Router>
+                </ThemeProvider>
+            </UserContext.Provider>
+        </MapContext.Provider>
     );
 }
 

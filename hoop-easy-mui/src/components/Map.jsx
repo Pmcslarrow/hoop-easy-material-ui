@@ -6,7 +6,7 @@ import DialogBox from './DialogBox';
 import FindGameCard from './FindGameCard';
 
 
-export default function GoogleMap({ availableGames, user, refresh, setRefresh }) {
+export default function GoogleMap({ availableGames, user, refresh, setRefresh, googleApi}) {
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [selectedGame, setSelectedGame] = useState()
     const [center, setCenter] = useState({
@@ -59,7 +59,7 @@ export default function GoogleMap({ availableGames, user, refresh, setRefresh })
     }
 
     return (
-        <APIProvider apiKey={"AIzaSyD-qamxgHTK8gbNFAp5hhq43-HIN6wCcRs"}>
+        <APIProvider apiKey={googleApi}>
             <DialogBox 
                 Component={<FindGameCard game={selectedGame} user={user} refresh={refresh} setRefresh={setRefresh}/>}
                 dialogOpen={isDialogOpen}

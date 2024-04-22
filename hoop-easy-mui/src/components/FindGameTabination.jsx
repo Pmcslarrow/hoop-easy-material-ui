@@ -3,7 +3,7 @@ import FindGameCard from "./FindGameCard";
 import { Box, Container, Grid, Tab, Tabs, Typography } from "@mui/material";
 import { useState } from "react";
 
-export default function FindGameTabination({availableGames, user, refresh, setRefresh}) {
+export default function FindGameTabination({availableGames, user, refresh, setRefresh, googleApi}) {
     const [tabValue, setTabValue] = useState('map')
 
     const handleChange = (event, newValue) => {
@@ -44,6 +44,7 @@ export default function FindGameTabination({availableGames, user, refresh, setRe
                         refresh={refresh}
                         setRefresh={setRefresh}
                         style={{ width: '100%', height: '100%'}}
+                        googleApi={googleApi}
                     />
                 </Box>   
             </Container>

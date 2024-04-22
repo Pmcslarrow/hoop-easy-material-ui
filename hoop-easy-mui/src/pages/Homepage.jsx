@@ -59,9 +59,10 @@ function SmallGrid({GridAttributes}) {
  * Homepage is the top level wrapper of all functionality. It is the hub of where we will 
  * create the structure of our page. 
  */
-export default function Homepage({ UserContext, getUser }) {
+export default function Homepage({ UserContext, MapContext, getUser }) {
     const navigate = useNavigate()
     const user = React.useContext(UserContext)
+    const googleApi = React.useContext(MapContext)
     const theme = useTheme();
     const isScreenSmall = useMediaQuery(theme.breakpoints.down('md'));
     const [rankData, setRankData] = React.useState([])
@@ -216,6 +217,7 @@ export default function Homepage({ UserContext, getUser }) {
                     user={user}
                     refresh={refresh}
                     setRefresh={setRefresh}
+                    googleApi={googleApi}
                 />            
             </Container>
             <br />
