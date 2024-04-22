@@ -1,7 +1,7 @@
 import { APIProvider, Map, AdvancedMarker, Pin } from '@vis.gl/react-google-maps';
 import getUserCoordinates from '../utils/timeAndLocation';
 import { useEffect, useState, useMemo, useCallback } from 'react';
-import { Box } from '@mui/material';
+import { Typography } from '@mui/material';
 import DialogBox from './DialogBox';
 import FindGameCard from './FindGameCard';
 
@@ -55,7 +55,7 @@ export default function GoogleMap({ availableGames, user, refresh, setRefresh })
     }, [availableGames]);
 
     if (center.lat === 30.00) {
-        return <Box>Loading map...</Box>;
+        return <Typography>Loading map...</Typography>;
     }
 
     return (

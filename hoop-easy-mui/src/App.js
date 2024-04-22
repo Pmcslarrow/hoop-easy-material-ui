@@ -1,4 +1,3 @@
-import './App.css';
 import React from 'react';
 import SignIn from './authentication/SignIn';
 import CreateAccount from './authentication/CreateAccount';
@@ -8,31 +7,6 @@ import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material';
 import { orange, indigo, grey } from '@mui/material/colors';
 const UserContext = React.createContext()
-/*
-const theme = createTheme({
-    palette: {
-        primary: {
-            main: '#1d3557',
-            contrastText: '#fff',
-          },
-          secondary: {
-            main: '#1d3557',
-            darkBlue: '#457b9d',
-            lightBlue: '#a8dadc',
-            lightRed: '#ee747e',
-            red: '#e63946'
-          },
-    },
-    typography: {
-        fontFamily: 'Quicksand',
-        fontWeightLight: 400,
-        fontWeightRegular: 500,
-        fontWeightMedium: 600,
-        fontWeightBold: 700
-    },
-    spacing: 10,
-})
-*/
 
 const theme = createTheme({
     palette: {
@@ -76,7 +50,6 @@ const theme = createTheme({
 
 function App() {
     const [currentUser, setCurrentUser] = React.useState()
-
     const getUser = React.useCallback(async (email) => {
         try {
             const response = await axios.get(`https://hoop-easy-production.up.railway.app/api/getUser?email=${email}`);

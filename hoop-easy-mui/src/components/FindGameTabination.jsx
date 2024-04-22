@@ -1,7 +1,7 @@
-import { Box, Container, Grid, Tab, Tabs, Typography } from "@mui/material";
-import { useState } from "react";
 import GoogleMap from "./Map";
 import FindGameCard from "./FindGameCard";
+import { Box, Container, Grid, Tab, Tabs, Typography } from "@mui/material";
+import { useState } from "react";
 
 export default function FindGameTabination({availableGames, user, refresh, setRefresh}) {
     const [tabValue, setTabValue] = useState('map')

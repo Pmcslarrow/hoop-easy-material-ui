@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableHead from '@mui/material/TableHead';
@@ -19,6 +18,8 @@ import LastPageIcon from '@mui/icons-material/LastPage';
 import DialogBox from './DialogBox';
 import SubmitGameData from './SubmitGameData';
 import VerifyGame from './VerifyGame';
+import { Badge } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 
 function TablePaginationActions(props) {
@@ -127,9 +128,9 @@ export default function CustomPaginationActionsTable({rows, columnNames, isMyGam
             case 'pending':
                 return 'Waiting for people to join'
             case 'confirmed':
-                return 'Click to submit scores'
+                return <Badge color="primary" variant='dot'>Submit the scores</Badge>
             case 'verification':
-                return 'Click to verify the game'
+                return <Badge color="primary" variant='dot'>Verify the game</Badge>
             default:
                 return status
         }
@@ -163,9 +164,10 @@ export default function CustomPaginationActionsTable({rows, columnNames, isMyGam
                     onClick={() => handleRowClick(row)}
                     sx={i % 2 === 0 ? {} : { backgroundColor: '#e8eaf6' }}
                 >
-                    <TableCell component="th" scope="row" >
+                    <TableCell component="th" scope="row">
                         {isMyGames ? createUsefulSentence(row.col1) : row.col1}
                     </TableCell>
+
                     <TableCell sx={{ width: 160 }} align="right" >
                         {row.col2}
                     </TableCell>

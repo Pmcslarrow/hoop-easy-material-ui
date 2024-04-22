@@ -3,13 +3,13 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import CustomPaginationActionsTable from '../components/TablePagination'
 import axios from 'axios';
 import DialogBox from '../components/DialogBox';
+import CreateGameForm from '../components/CreateGameForm';
+import FindGameTabination from '../components/FindGameTabination';
 import { convertToLocalTime, extractDateTime, sortGamesByLocationDistance } from '../utils/timeAndLocation';
-import { Container, Grid, Paper, Box, Typography, Button, Avatar, Alert, setRef, Tabs, Tab } from "@mui/material";
+import { Container, Grid, Paper, Box, Typography, Button, Avatar, Alert } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
-import CreateGameForm from '../components/CreateGameForm';
-import FindGameTabination from '../components/FindGameTabination';
 
 // GLOBALS
 const Item = styled(Paper)(({ theme }) => ({

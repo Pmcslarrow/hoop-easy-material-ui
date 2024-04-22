@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -10,6 +9,7 @@ import { Box, Avatar } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import { extractDateTime } from "../utils/timeAndLocation";
 import { createTeammateArrayFromJson, createTeammateJsonFromArray } from "../utils/jsonFunc";
+import { useState, useEffect } from "react";
 
 // Pass in the object that contains all the information about the game
 export default function FindGameCard({ game, user, refresh, setRefresh }) {

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Button, Menu, MenuItem, Select, Typography } from '@mui/material';
+import { Box, Button, MenuItem, Select, Typography } from '@mui/material';
 import { Input as BaseInput } from '@mui/base/Input';
 import { localToUTC } from '../utils/timeAndLocation';
 import LocationSearchInput from './GoogleNavigation';
