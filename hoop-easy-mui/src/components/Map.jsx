@@ -13,6 +13,13 @@ export default function GoogleMap({ availableGames, user, refresh, setRefresh })
         lat: 30.00,
         lng: 30.00
     });
+    const colorHashMap = {
+        1: "#8ecae6",
+        2: "#219ebc",
+        3: '#023047',
+        4: '#ffb703',
+        5: '#fb8500'
+    }
 
     const handleClose = () => {
         setIsDialogOpen(false)
@@ -42,7 +49,7 @@ export default function GoogleMap({ availableGames, user, refresh, setRefresh })
                 position={{ lat: parseFloat(game?.latitude), lng: parseFloat(game?.longitude) }}
                 onClick={() => handleMarkerClick(game)}
             >
-                <Pin background={'#ff9800'} glyphColor={'#000'} borderColor={'#000'}/>
+                <Pin background={colorHashMap[parseInt(game?.gameType)]} glyphColor={'#000'} borderColor={'#000'} />
             </AdvancedMarker>
         ));
     }, [availableGames]);
@@ -73,7 +80,7 @@ export default function GoogleMap({ availableGames, user, refresh, setRefresh })
                     key={'home-marker'}
                     position={{ lat: parseFloat(center?.lat), lng: parseFloat(center?.lng) }}
                 >
-                    <Pin background={'#457b9d'} glyphColor={'#000'} borderColor={'#000'}/>
+                    <Pin background={'red'} glyphColor={'#000'} borderColor={'#000'}/>
                 </AdvancedMarker>
             </Map>
         </APIProvider>

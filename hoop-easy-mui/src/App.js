@@ -37,7 +37,7 @@ const theme = createTheme({
 const theme = createTheme({
     palette: {
         primary: {
-            main: orange[500],
+            main: orange[700],
             orange_100: orange[100],
             orange_200: orange[200],
             orange_300: orange[300],

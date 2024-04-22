@@ -139,39 +139,40 @@ export default function CustomPaginationActionsTable({rows, columnNames, isMyGam
         <TableContainer component={Paper} sx={{boxShadow: '1px 1px 5px 1px rgba(0,0,0,0.2)'}}>
         <DialogBox Component={selectedComponent} dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} handleClose={handleClose}/>
         <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
-            <TableHead>
+            <TableHead sx={{ backgroundColor: '#3f51b5'}}>
                 <TableRow>
                 {columnNames.map((column, i) => ( 
                     <TableCell
                     key={Math.random().toString(16).slice(2)}
                     align={column.align}
-                    style={{ minWidth: column.minWidth }}
+                    style={{ minWidth: column.minWidth, color: 'white' }}
                     >
                     {column.label}
                     </TableCell>
                 ))}
                 </TableRow>
             </TableHead>
-            <TableBody>
+            <TableBody >
             {(rowsPerPage > 0
                 ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 : rows
-            ).map((row) => (
+            ).map((row, i) => (
                 <TableRow
                     key={Math.random().toString(16).slice(2)}
                     id = {isMyGames ? 'myGamesRow' : {}}
                     onClick={() => handleRowClick(row)}
+                    sx={i % 2 === 0 ? {} : { backgroundColor: '#e8eaf6' }}
                 >
                     <TableCell component="th" scope="row" >
                         {isMyGames ? createUsefulSentence(row.col1) : row.col1}
                     </TableCell>
-                    <TableCell style={{ width: 160 }} align="right" >
+                    <TableCell sx={{ width: 160 }} align="right" >
                         {row.col2}
                     </TableCell>
-                    <TableCell style={{ width: 160 }} align="right">
+                    <TableCell sx={{ width: 160 }}  align="right">
                         {row.col3}
                     </TableCell>
-                    <TableCell style={{ width: 160 }} align="right">
+                    <TableCell sx={{ width: 160 }}  align="right">
                         {row.col4}
                     </TableCell>
                 </TableRow>

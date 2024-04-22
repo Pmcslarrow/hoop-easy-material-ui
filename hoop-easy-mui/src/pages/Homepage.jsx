@@ -1,16 +1,15 @@
 import React, { useEffect } from 'react'
 import useMediaQuery from '@mui/material/useMediaQuery';
 import CustomPaginationActionsTable from '../components/TablePagination'
-import FindGameCard from "../components/FindGameCard";
 import axios from 'axios';
 import DialogBox from '../components/DialogBox';
 import { convertToLocalTime, extractDateTime, sortGamesByLocationDistance } from '../utils/timeAndLocation';
-import { Container, Grid, Paper, Box, Typography, Button, Avatar, Alert, setRef } from "@mui/material";
+import { Container, Grid, Paper, Box, Typography, Button, Avatar, Alert, setRef, Tabs, Tab } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import CreateGameForm from '../components/CreateGameForm';
-import GoogleMap from '../components/Map';
+import FindGameTabination from '../components/FindGameTabination';
 
 // GLOBALS
 const Item = styled(Paper)(({ theme }) => ({
@@ -55,29 +54,6 @@ function SmallGrid({GridAttributes}) {
     )
 }
 
-/**
- * The LargeGrid is used as the wrapper container outside of the Find a Game section
- * @param {string} title
- */
-function LargeGrid({title, user, availableGames, refresh, setRefresh }) {
-    const games = availableGames.map((game) => {
-        return (
-            <Grid item xs={12} sm={6} md={4} lg={3}>
-                <FindGameCard game={game} user={user} refresh={refresh} setRefresh={setRefresh}/>
-            </Grid>
-        )
-    })
-
-    return (
-        <Box sx={{ flexGrow: 1 }}>
-            <Typography variant="h5">{title}</Typography>  
-            <br />
-            <Grid container spacing={2}>
-                {games}
-            </Grid>
-        </Box>        
-    )
-}
 
 /**
  * Homepage is the top level wrapper of all functionality. It is the hub of where we will 
@@ -94,6 +70,7 @@ export default function Homepage({ UserContext, getUser }) {
     const [refresh, setRefresh] = React.useState(0)
     const [dialogOpen, setDialogOpen] = React.useState(false)
     const [isLoading, setLoading] = React.useState(false)
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -231,31 +208,15 @@ export default function Homepage({ UserContext, getUser }) {
                 <SmallGrid GridAttributes={AttRight}></SmallGrid>             
             </Container>
             <br />
-            <Container maxWidth='xl' >
-                <LargeGrid 
-                    title={'Find a Game (List)'} 
-                    availableGames={availableGames} 
-                    user={user} 
+            <Container>
+                <Typography variant='h5'>Find a Game</Typography>
+                <br />
+                <FindGameTabination 
+                    availableGames={availableGames}
+                    user={user}
                     refresh={refresh}
                     setRefresh={setRefresh}
-                    large={true}
-                ></LargeGrid>
-            </Container>
-            <br />
-            <Container>
-                <Box sx={{ flexGrow: 1, width: '100%', height: '50vh', marginBottom: '100px'}}>
-                    <Typography variant="h5">Find a Game (Map)</Typography>  
-                    <br />
-                    <Typography variant='subtitle2' sx={{color: '#457b9d'}}>Your Location</Typography>
-                    <Typography variant='subtitle2' sx={{color: '#ff9800'}}>Games</Typography>
-                    <GoogleMap 
-                        availableGames={availableGames}
-                        user={user}
-                        refresh={refresh}
-                        setRefresh={setRefresh}
-                        style={{ width: '100%', height: '100%'}}
-                    />
-                </Box>   
+                />            
             </Container>
             <br />
         </Container>
