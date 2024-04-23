@@ -95,8 +95,8 @@ export default function SignIn({ getUser }) {
                 </Button>
                 <Grid container>
                 <Grid item xs>
-                    <Link href="#" variant="body2">
-                    Forgot password?
+                    <Link variant="body2" onClick={() => navigate('/resetPassword')}>
+                        Reset password
                     </Link>
                 </Grid>
                 <Grid item>

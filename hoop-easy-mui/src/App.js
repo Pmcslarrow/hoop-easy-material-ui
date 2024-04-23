@@ -6,9 +6,9 @@ import axios from 'axios';
 import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material';
 import { orange, indigo, grey } from '@mui/material/colors';
+import ResetPassword from './components/ResetPassword';
 const UserContext = React.createContext()
 const MapContext = React.createContext()
-console.log(process.env)
 
 const theme = createTheme({
     palette: {
@@ -70,6 +70,7 @@ function App() {
                             <Route path='/' element={<SignIn getUser={getUser}/>} />
                             <Route path='/homepage' element={<Homepage UserContext={UserContext} MapContext={MapContext} getUser={getUser}/> } />
                             <Route path='/createAccount' element={<CreateAccount />} />
+                            <Route path='/resetPassword' element={<ResetPassword />} />
                         </Routes>
                     </Router>
                 </ThemeProvider>
