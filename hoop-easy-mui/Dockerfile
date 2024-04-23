@@ -12,7 +12,7 @@ ENV REACT_APP_PROJECTID=default_value
 ENV REACT_APP_STORAGE=default_value
 ENV REACT_APP_GOOGLE_API=default_value
 
-WORKDIR /app/src/hoop-easy-client
+WORKDIR /app/src/hoop-easy-mui
 
 COPY package*.json ./
 
