@@ -54,7 +54,7 @@ const theme = createTheme({
 Looking back at the code I wrote early on in the authentication process, it was confusing. I was writing my javascript in a C-like format where functions return nullish values when they fail, and otherwise return back the data. Saying this outloud I realized that Javascript has functionality for this out of box that could make the code more precise, and in which handles errors well — Promises. This was fixed for both login and createAccount. We will draw examples from creating a new user.
 
 ### Old handling (no promises)
-`
+```javascript
 const handleSubmit = async (e) => {
     e.preventDefault();
     if (isEmpty()) {
@@ -78,10 +78,10 @@ const handleSubmit = async (e) => {
       handleError(setError, setMessage, err);
     }
   };
-  `
+  ```
 
   ### New handling (promises)
-  `
+  ```javascript
   async function createNewUser(first, last, username, email, password) {
     return new Promise((resolve, reject) => {
         if (isEmpty([first, last, username, email, password])) {
@@ -115,7 +115,7 @@ const handleSubmit = async (event) => {
         console.log(res)
     })
   };
-  `
+  ```
 
   ### New vs. Old Authentication UI Comparison
   ![Screenshot 2024-04-22 at 9 38 19 PM](https://github.com/Pmcslarrow/hoop-easy-material-ui/assets/74205136/8f585959-94eb-437b-89d5-4ca4058ce92d)
@@ -144,7 +144,7 @@ The general statistics component is used as the replacement for the rankings pag
 
 You can’t see it in one copy, however, the currentUserID was calculated in the parent component useEffect, and forced a re-render of the PlayerOverallRating without regards to when it should actually re-render. We also made a point earlier that we would move towards using more error handling instances in the code. And rather than holding the user, and the userID separately, we made sure to use one User which we could draw our information from.
 
-`
+```javascript
 const PlayerOverallRating = ({currentUserID, refreshToken}) => {
     const [overallRating, setOverallRating] = useState(null)
 
@@ -156,13 +156,12 @@ const PlayerOverallRating = ({currentUserID, refreshToken}) => {
 
         getOverallRating()
     }, [refreshToken])
-  `
+  ```
 
 ### New Code
 The new code only re-renders on a manaul refresh. This seems very similar to the old version, but the major difference is that it does not force re-renders anymore for multiple other components when this happens, it only manually adjust a select handful.
 
-`
-
+```javascript
 useEffect(() => {
 	getUser(user?.email)
 }, [refresh]) 
@@ -176,8 +175,7 @@ const getUser = React.useCallback(async (email) => {
     console.error(err);
   }
 }, []);
-
-`
+```
 
 ## My Games
 ---
@@ -214,7 +212,7 @@ We have discussed the high level user understanding of what is expected from eac
 The first thing that we must describe is how we actually re-use the two same components (General Statistics and My Games) at the top of the page, with different data. We accomplish this by using a single wrapper that takes in some props as a parameter with the data that should be filled in accordingly. It takes in GridAttributes, which contain the title of the page, and the data that should go into the two blue boxes at the top, and then the data to fill the table.
 
   
-`
+```javascript
 // GridAttributes which are passed in for My Games
 const AttRight = {
         title: 'My Games',
@@ -256,11 +254,11 @@ function SmallGrid({GridAttributes}) {
         </Box>        
     )
 }
-`
+```
 
 Since we have used TablePagination.jsx as the reusable component for the top two parent components, the logic that drives what happens in the My Games section works a little differently. Inside the Table, we use inline logic that tells the program that IF we pass in the MyGames component in, allow the user to click the rows, and if they do click the rows, handleRowClick as seen below. When handling the row clicks, we must check what type of game we are looking at to choose which component that the dialog modal should show. If the game is a ‘confirmed’ game, then we know the user still has to submit the scores of the game, so we set the selected component to this and open the dialog. If the game is a ‘verification’ game, then we know the game stats were submitted, and we need to show the logic for verifying a game.
 
-`
+```javascript
 const handleRowClick = (game) => {
         setSelectedGame(game)
         if (game.col1 === 'confirmed') {
@@ -273,10 +271,11 @@ const handleRowClick = (game) => {
             setDialogOpen(true)
         }
 }
-`
+```
 
 The old version of this similar logic is shown below. It was too confusing for anyone passing by the code to understand. It looks clean, however, I personally apologize for anyone that may have had to look at this because in some cases it returns components, and then it also returns a function which returns a component and more under the hood. It was not simplified enough.
-`
+
+```javascript
 const renderLowerCardSection = () => {
             if (type === 'pending') {
                 return <WaitingForGameAcceptance />
@@ -290,7 +289,7 @@ const renderLowerCardSection = () => {
                 return handleVerificationStage()
             }
  };
- `
+ ```
 
  Nearly every single line of code was rewritten, so for the purpose of this document, it would not be appropriate to explain every piece of logic in the application, but only a subset of changes that could be useful in seeing how it was improved.
 
@@ -304,7 +303,8 @@ Another component that was completely redesigned was finding a game. I had to fi
 ![Screenshot 2024-04-22 at 9 35 49 PM](https://github.com/Pmcslarrow/hoop-easy-material-ui/assets/74205136/1542c679-4095-43e0-aa65-d1bc158d4f46)
 
 This component will be compared to the original version’s code because there was a lot that was cut down in order to create better results. The first thing one can see is the cutdown in the amount of code used to create virtually the same logic. I came to the conclusion that if the game prop has the teammates already in it as an object, then we wouldn’t need to re-fetch the teammates based on the game information, we could just use the .find method on the object values and check to see if the current user is a teammate of the game. If the current user is already in the game, we know to handle Leaving the game, otherwise the user is trying to join this game. Also notice that this is an example of where I called getCurrentUserID to then use this information within the program, rather than using context as in the new version and passing it in as a single prop that can be reused.
-`
+
+```javascript
 // NEW
 export default function FindGameCard({ game, user, refresh, setRefresh }) {
     const [isUserAlreadyInsideGame, setUserAlreadyInAGame] = useState(false)
@@ -321,9 +321,9 @@ export default function FindGameCard({ game, user, refresh, setRefresh }) {
         }    
         isTeammateInGame()
     }, [game, user])
-`
+```
 
-`
+```javascript
 // OLD
 const FindGameCard = ({ props }) => {
     const { game, refreshToken, setRefreshToken } = props;
@@ -360,11 +360,11 @@ const FindGameCard = ({ props }) => {
         getArrayOfTeammates()
         getCurrentUserID()
     }, [refreshToken]);
-`
+```
 
 The handleJoinGame and handleLeaveGame methods are almost identical, so I do not need to show them here, however, the calculation of key details that appear on the page is cleaned up tremendously as you can see below. I even use a hashMap for fast look-up times in order to get the theme to be used on each card, based on the type of game it is (1v1 = 1, 2v2 = 2, etc…). Everything in the new version is clear and concise, where the old version is slightly upsetting.
 
-`
+```javascript
 // NEW
   const theme = useTheme()
   const colorHashMap = {
@@ -379,9 +379,9 @@ The handleJoinGame and handleLeaveGame methods are almost identical, so I do not
   let numberOfPlayersJoined = Object.values(game.teammates).length
   let maxNumberOfPlayers = parseInt(game?.gameType * 2)
   let playersNeeded = maxNumberOfPlayers - numberOfPlayersJoined
-`
+```
 
-`
+```javascript
 // OLD -- Makes me sad that these were both done by the same developer and do the same thing at the end (both me)...
 
 // @input: ['2', '3']
@@ -426,7 +426,7 @@ The handleJoinGame and handleLeaveGame methods are almost identical, so I do not
             backgroundColor: 'var(--background-dark-orange)'
         }
     }
-`
+```
 
 
 
@@ -462,7 +462,7 @@ As you can see below, when the user clicks the single game that exists on the ma
 
 The final step after changing some of the little UI decisions and theming ideas is to deploy it. The first thing that I had to do was create a Dockerfile for the application that could take in arguments of environment variables passed down from Railway so that we could have secure variables.
 
-`
+```docker
 FROM node:18-alpine AS Production
 
 # Set default values for environment variables
@@ -509,7 +509,7 @@ ENV REACT_APP_GOOGLE_API=$GOOGLE_API
 RUN npm run build
 
 CMD ["npx", "serve", "-s", "build"]
-`
+```
 
 While it took some playing around, I was able to figure out the correct settings to prevent any errors from ESLint seen in the application, and made sure that there were not environment variables that still existing for people to see. 
 
