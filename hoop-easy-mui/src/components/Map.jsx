@@ -1,7 +1,6 @@
 import { APIProvider, Map, AdvancedMarker, Pin } from '@vis.gl/react-google-maps';
-import getUserCoordinates from '../utils/timeAndLocation';
 import { useEffect, useState, useMemo, useCallback } from 'react';
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import DialogBox from './DialogBox';
 import FindGameCard from './FindGameCard';
 
@@ -25,11 +24,37 @@ export default function GoogleMap({ availableGames, user, refresh, setRefresh, g
     }
 
     const memoizedSetCenter = useCallback(async () => {
-        const center = await getUserCoordinates();
-        setCenter({
-            lat: center.latitude,
-            lng: center.longitude
-        });
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+              position => {
+                const { latitude, longitude } = position.coords;
+                setCenter({
+                    lat: latitude,
+                    lng: longitude
+                })
+              },
+              error => {
+                if (error.code === error.PERMISSION_DENIED) {
+                  console.log("User denied the request for Geolocation.");
+                  setCenter({
+                    lat: 40.748440,
+                    lng: -73.984559
+                  })
+                } else {
+                  console.error("Error getting user location:", error);
+                  setCenter({
+                    lat: 40.748440,
+                    lng: -73.984559
+                  })
+                }
+              }
+            );
+          } else {
+            setCenter({
+                lat: 40.748440,
+                lng: -73.984559
+              })
+        }
     }, []);
 
     useEffect(() => {
@@ -78,12 +103,16 @@ export default function GoogleMap({ availableGames, user, refresh, setRefresh, g
                 mapId={'6d06e0f6b87bce0'}
             >
                 {memoizedMapMarkers}
-                <AdvancedMarker
-                    key={'home-marker'}
-                    position={{ lat: parseFloat(center?.lat), lng: parseFloat(center?.lng) }}
-                >
-                    <Pin background={'red'} glyphColor={'#000'} borderColor={'#000'}/>
-                </AdvancedMarker>
+                {center?.lat === 40.748440 ? (
+                    <Box>Enable Location...</Box>
+                ) : (
+                    <AdvancedMarker
+                        key={'home-marker'}
+                        position={{ lat: parseFloat(center?.lat), lng: parseFloat(center?.lng) }}
+                    >
+                        <Pin background={'red'} glyphColor={'#000'} borderColor={'#000'} />
+                    </AdvancedMarker>
+                )}
             </Map>
         </APIProvider>
     );

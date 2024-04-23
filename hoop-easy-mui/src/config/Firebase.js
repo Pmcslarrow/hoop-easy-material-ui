@@ -11,7 +11,6 @@ const {
     REACT_APP_MEASUREMENT
 } = process.env
 
-
 const firebaseConfig = {
     apiKey: REACT_APP_APIKEY,
     authDomain: REACT_APP_DOMAIN,
