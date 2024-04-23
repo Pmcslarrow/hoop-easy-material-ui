@@ -8,6 +8,7 @@ import { ThemeProvider, createTheme } from '@mui/material';
 import { orange, indigo, grey } from '@mui/material/colors';
 const UserContext = React.createContext()
 const MapContext = React.createContext()
+console.log(process.env)
 
 const theme = createTheme({
     palette: {
@@ -48,11 +49,6 @@ const theme = createTheme({
     spacing: 10,
 })
 
-/***
- * map api key needs to be passed into the <GoogleMap /> either as a prop or a context
- * 
- * 
- */
 
 function App() {
     const [currentUser, setCurrentUser] = React.useState()
