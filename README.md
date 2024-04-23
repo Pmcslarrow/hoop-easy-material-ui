@@ -118,24 +118,24 @@ const handleSubmit = async (event) => {
   `
 
   ### New vs. Old Authentication UI Comparison
-  ![Screenshot 2024-04-07 at 11.42.39 AM.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/975dddf8-60df-4936-891f-9505a206bb35/473492cd-0af1-489d-8d41-87f2c8d8749b/Screenshot_2024-04-07_at_11.42.39_AM.png)
-  ![Screenshot 2024-04-07 at 11.42.04 AM.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/975dddf8-60df-4936-891f-9505a206bb35/feba5e45-d712-4ac4-a9b7-7a3087d0b206/Screenshot_2024-04-07_at_11.42.04_AM.png)
+  ![Screenshot 2024-04-22 at 9 38 19 PM](https://github.com/Pmcslarrow/hoop-easy-material-ui/assets/74205136/8f585959-94eb-437b-89d5-4ca4058ce92d)
+  ![Screenshot 2024-04-22 at 9 39 03 PM](https://github.com/Pmcslarrow/hoop-easy-material-ui/assets/74205136/f172a3a0-f584-4d01-ae8e-99bb703f4e53)
+
 
 
 ## Homepage
-
 ---
 
 While the homepage which holds all the core functionality is simple, I believe that we can improve it. The homepage has three key components: How to play, My Games, and History. The page was a more inefficient version of functionality to go through the steps of creating, finding, playing, and submitting game results.
 
 Instead of having three components that take up 100% of the viewport height each, I am going to give the page a dashboard sort of feel. A central hub where you can do the same things as the old version of the app, but more condensed.
-![Screenshot 2024-04-07 at 11.56.51 AM.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/975dddf8-60df-4936-891f-9505a206bb35/fd21de51-e6e5-4e49-945c-6cc735b7019b/Screenshot_2024-04-07_at_11.56.51_AM.png)
+![Screenshot 2024-04-22 at 9 39 44 PM](https://github.com/Pmcslarrow/hoop-easy-material-ui/assets/74205136/3bd4e0e4-2c4a-4b58-a9af-585487a2d227)
 ![Screenshot 2024-04-22 at 9 29 00 PM](https://github.com/Pmcslarrow/hoop-easy-material-ui/assets/74205136/0d809dd2-a5a2-45fd-a5a8-e5a9dcf0f86d)
 We will start with the general statistics components and what was changed in order to drive efficiency.
 
 
-## General Statistics
 
+## General Statistics
 ---
 
 The general statistics component is used as the replacement for the rankings page that existed on the original HoopEasy app. The new version uses MaterialUI’s built in Pagination system to make the component more compact and elegant at once. At the top left of the entire wrapped component, the overall rating is shown, rather than staying sticky at the bottom left of the user’s screen at all times. One area where I focused on improvements in my code was in the overcalculation of certain parameters (getting user ID, getting overall rating, calculating ranks in line…). In the old version of the application, I would go through the process of fetching the current user ID and then plugging this user ID into another fetch call which would get the users overall rating… This was a waste of resources. Instead, I knew that the overall rating was attached to each user profile, and we are using useContext at the top level of the application to hold the user’s information and then pass props with it later on in the homepage. Given this information, I instead used useEffect and passed in the [user] as one of the dependencies to refresh all of the data for, so that when there was a reason for the user’s information to update on the page (say the user won a game and their overall rating increased), then the useEffect would re-fetch the updated user information this way once instead of multiple times. The same logic I just described is the backbone of the improvement of code for nearly each component. Instead of unnecessary re-rendering from the old code, I managed to improve these unnecessary calls with the use of native React hooks. The other thing that I noticed was using wasted overhead memory, was the location in which each element was called. In the old version, I had each individual component become a sibling or a child of one parent component. This meant that whenever the most important parent component re-rendered, it automatically would re-render the components down the DOM tree which was not necessary.
@@ -191,15 +191,15 @@ With regards to the user experience, we made sure to let the user hover over ele
 
 When clicked, the user is able to submit scores and captains of the game in a very familiar way to the previous application, except use a single form rather than a three step drawer that used up lots of memory in the previous app:
 ![Screenshot 2024-04-22 at 9 32 05 PM](https://github.com/Pmcslarrow/hoop-easy-material-ui/assets/74205136/7825c073-679b-49e8-9dee-45154bc396e8)
-![Screenshot 2024-04-16 at 9.58.28 AM.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/975dddf8-60df-4936-891f-9505a206bb35/e28ef6c1-c525-4bfd-973f-346f29e09c52/Screenshot_2024-04-16_at_9.58.28_AM.png)
+
 
 ### Verifying Scores
 
 As much as we loved the design of the old card in this stage, we needed to remove the @vis.gl/react-google-maps API as it was causing too long of renders shown from the React Profiler built into Google Chrome to analyze efficiency in our components. While we ended up using vis.gl for the large map discussed later on, it was wasted overhead memory having multiple list view items containing their own map components each, which would all have too long of re-renders everytime the user adjusted data, or their screen size on the old version. Removing it only made sense. 
 
 Using the same table and modal to enforce familiarity in the application, we implement a very similar logic system from the old to the new version for this step, except that we cannot show Accept and Deny inside the table so we use the Dialog modal again:
-![Screenshot 2024-04-16 at 10.01.33 AM.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/975dddf8-60df-4936-891f-9505a206bb35/041f88e9-1c96-4e09-b034-65e1093cc6f5/Screenshot_2024-04-16_at_10.01.33_AM.png)
-![Screenshot 2024-04-16 at 10.03.02 AM.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/975dddf8-60df-4936-891f-9505a206bb35/92733018-c98b-4fc7-b37b-c04490823ee6/Screenshot_2024-04-16_at_10.03.02_AM.png)
+![Screenshot 2024-04-22 at 9 41 14 PM](https://github.com/Pmcslarrow/hoop-easy-material-ui/assets/74205136/f6c0c325-4e47-4d18-ab7b-12090c2861a3)
+![Screenshot 2024-04-22 at 9 41 37 PM](https://github.com/Pmcslarrow/hoop-easy-material-ui/assets/74205136/8534e5b5-a66f-401e-aad1-f8add671c568)
 
 When the second captain verifies the game, it goes through the process of using our manual refresh mentioned earlier, which will then re-render the three main components of the application because it is the instance that requires a change in every component on the page, which is expected.
 
@@ -301,14 +301,130 @@ Another component that was completely redesigned was finding a game. I had to fi
 ![Screenshot 2024-04-22 at 9 35 07 PM](https://github.com/Pmcslarrow/hoop-easy-material-ui/assets/74205136/f17d5c88-7f28-45e2-a4ff-51fe558c4940)
 ![Screenshot 2024-04-22 at 9 35 49 PM](https://github.com/Pmcslarrow/hoop-easy-material-ui/assets/74205136/1542c679-4095-43e0-aa65-d1bc158d4f46)
 
-This component will be compared to the original version’s code because there was a lot that was cut down in order to create better results. The new code will be in dark mode and the old in light. The first thing one can see is the cutdown in the amount of code used to create virtually the same logic. I came to the conclusion that if the game prop has the teammates already in it as an object, then we wouldn’t need to re-fetch the teammates based on the game information, we could just use the .find method on the object values and check to see if the current user is a teammate of the game. If the current user is already in the game, we know to handle Leaving the game, otherwise the user is trying to join this game. Also notice that this is an example of where I called getCurrentUserID to then use this information within the program, rather than using context as in the new version and passing it in as a single prop that can be reused.
-![Screenshot 2024-04-16 at 10.36.35 AM.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/975dddf8-60df-4936-891f-9505a206bb35/28c89e34-9332-4a37-b21c-7f45c3cc0a50/Screenshot_2024-04-16_at_10.36.35_AM.png)
-![Screenshot 2024-04-16 at 10.37.19 AM.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/975dddf8-60df-4936-891f-9505a206bb35/92e6440e-40cf-45c6-8467-5b3e2321f8ad/Screenshot_2024-04-16_at_10.37.19_AM.png)
+This component will be compared to the original version’s code because there was a lot that was cut down in order to create better results. The first thing one can see is the cutdown in the amount of code used to create virtually the same logic. I came to the conclusion that if the game prop has the teammates already in it as an object, then we wouldn’t need to re-fetch the teammates based on the game information, we could just use the .find method on the object values and check to see if the current user is a teammate of the game. If the current user is already in the game, we know to handle Leaving the game, otherwise the user is trying to join this game. Also notice that this is an example of where I called getCurrentUserID to then use this information within the program, rather than using context as in the new version and passing it in as a single prop that can be reused.
+`
+// NEW
+export default function FindGameCard({ game, user, refresh, setRefresh }) {
+    const [isUserAlreadyInsideGame, setUserAlreadyInAGame] = useState(false)
+    const [open, setOpen] = useState(false);
 
+    useEffect(() => {
+        const isTeammateInGame = () => {
+            let result = Object.values(game?.teammates).find((value) => value === user.id.toString())
+            if (result === undefined || result === null) {
+                setUserAlreadyInAGame(false)
+            } else {
+                setUserAlreadyInAGame(true)
+            }
+        }    
+        isTeammateInGame()
+    }, [game, user])
+`
+
+`
+// OLD
+const FindGameCard = ({ props }) => {
+    const { game, refreshToken, setRefreshToken } = props;
+    const [teammatesIdArray, setTeammatesIdArray] = useState([]);
+    const MAX_PLAYERS = parseInt(game.gameType) * 2
+    const CURRENT_NUMBER_TEAMMATES = teammatesIdArray && teammatesIdArray.length > 0 ? teammatesIdArray.length : 0;
+    const [currentUserID, setCurrentUserID] = useState([])
+
+    useEffect(() => {
+        const getArrayOfTeammates = async () => {
+            try {
+                const result = await axios.get('https://hoop-easy-production.up.railway.app/api/getTeammates', { params: game });        
+                if (result.data && result.data[0] && result.data[0].teammates) {
+                    const teammates = result.data[0].teammates;
+                    const teammatesArray = Object.keys(teammates).map(key => teammates[key]);
+                    setTeammatesIdArray(teammatesArray);
+                } else {
+                    console.error('Unexpected response structure:', result.data);
+                }
+            } catch (error) {
+                console.error('Error fetching teammates:', error);
+            }
+        };
+        
+        
+        const getCurrentUserID = async () => {
+            const currentUserEmail = auth?.currentUser?.email
+            if (currentUserEmail !== undefined) {
+                const result = await axios.get(`https://hoop-easy-production.up.railway.app/api/getCurrentUserID?email=${currentUserEmail}`);
+                setCurrentUserID(result.data)
+            }
+        }
+                
+        getArrayOfTeammates()
+        getCurrentUserID()
+    }, [refreshToken]);
+`
 
 The handleJoinGame and handleLeaveGame methods are almost identical, so I do not need to show them here, however, the calculation of key details that appear on the page is cleaned up tremendously as you can see below. I even use a hashMap for fast look-up times in order to get the theme to be used on each card, based on the type of game it is (1v1 = 1, 2v2 = 2, etc…). Everything in the new version is clear and concise, where the old version is slightly upsetting.
-![Screenshot 2024-04-16 at 10.43.27 AM.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/975dddf8-60df-4936-891f-9505a206bb35/6a012166-499d-4fb7-825c-960ef9b01e52/Screenshot_2024-04-16_at_10.43.27_AM.png)
-![Screenshot 2024-04-16 at 10.44.48 AM.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/975dddf8-60df-4936-891f-9505a206bb35/973d9908-76cf-47aa-9671-c616a53c18fc/Screenshot_2024-04-16_at_10.44.48_AM.png)
+
+`
+// NEW
+  const theme = useTheme()
+  const colorHashMap = {
+    1: theme.palette.primary.orange_200,
+    2: theme.palette.primary.orange_300,
+    3: theme.palette.primary.orange_400,
+    4: theme.palette.primary.main,
+    5: theme.palette.primary.orange_600,
+  }
+
+  let { date, time } = extractDateTime(game?.time)
+  let numberOfPlayersJoined = Object.values(game.teammates).length
+  let maxNumberOfPlayers = parseInt(game?.gameType * 2)
+  let playersNeeded = maxNumberOfPlayers - numberOfPlayersJoined
+`
+
+`
+// OLD -- Makes me sad that these were both done by the same developer and do the same thing at the end (both me)...
+
+// @input: ['2', '3']
+    // @return: '{"teammate0": "1", "teammate1": "2"}'
+    const createTeammateJsonFromArray = (array) => {
+        const jsonArray = []
+        for (let i=0; i<array.length; i++) {
+            if (array[i] !== undefined) {
+                const string = `"teammate${i}": "${array[i]}"`
+                jsonArray.push(string)
+            }
+        }
+        const jsonInside = jsonArray.join(', ')
+        const json = '{' + jsonInside + '}'
+        return json
+    }
+  
+    const playerSlots = Array.from({ length: MAX_PLAYERS }, (_, index) => {
+        const className = index < CURRENT_NUMBER_TEAMMATES ? 'taken' : 'open';        
+        return <div key={index} className={className}></div>;
+    });
+
+    // We disable the player's ability to join a game if they are already a teammate of the game -- So they can leave the game instead
+    const disablePlayerAbilityToJoinGame = teammatesIdArray ? teammatesIdArray.some((player) => player.toString() === currentUserID.toString()) : false;
+    
+    if ( CURRENT_NUMBER_TEAMMATES <= 0 ) {
+        return <div style={{display: 'none'}}></div>
+    }
+    
+    // Expecting 2024-01-28 01:40:00 which is 5:40pm in my time
+    const convertedDateTime = convertToLocalTime(game.dateOfGameInUTC)
+    const {latitude, longitude} = game
+
+    // Removes the country so that it fits well in the card
+    const indexOfCountry = game.address.lastIndexOf(',')
+    const address = game.address.slice(0, indexOfCountry)
+
+    const buttonStyling = {
+        backgroundColor: 'var(--background-gradient-start)',
+        color: 'white',
+        '&:hover': {
+            backgroundColor: 'var(--background-dark-orange)'
+        }
+    }
+`
 
 
 
@@ -318,9 +434,9 @@ The handleJoinGame and handleLeaveGame methods are almost identical, so I do not
 The create a game component is arguably the most important component in the entire application. As simple as it seems, there would be no app without games! This being said, we as a team had many discussions about how we can minimize the amount of time and effort it takes for a user to complete this form. We also had to move away from the @vis.gl/react-google-maps API due to its lack of efficiency and use the react-places-autocomplete package. Its UI isn’t quite as appealing (which is always something we can change later on, but this is being discussed in production) but the usability is nearly the exact same as before.
 
 The picture on the left shows the canva design of the very first model we had in mind for creating a game, and while I still love the dark design we had, it is the simplification in steps that is appreciated. Rather than 6 required steps (not even including the game type at this point in the design/implementation process), we now use four, and the use of the Google Places API is crucial in creating this change and simplification for the user!
+![Screenshot 2024-04-22 at 9 47 09 PM](https://github.com/Pmcslarrow/hoop-easy-material-ui/assets/74205136/2f6dc63f-26fd-404d-8481-8de09e6d136f)
+![Screenshot 2024-04-22 at 9 47 32 PM](https://github.com/Pmcslarrow/hoop-easy-material-ui/assets/74205136/5953d006-95f7-462c-b924-17266e6748a2)
 
-![Screenshot 2024-04-16 at 10.56.46 AM.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/975dddf8-60df-4936-891f-9505a206bb35/94f692bd-b7d3-41a0-86c1-37cd4a23d12d/Screenshot_2024-04-16_at_10.56.46_AM.png)
-![Screenshot 2024-04-21 at 5.30.09 PM.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/975dddf8-60df-4936-891f-9505a206bb35/e2e0420a-bb17-4649-be99-e18bdc6c4a89/Screenshot_2024-04-21_at_5.30.09_PM.png)
 
 
 
@@ -333,7 +449,7 @@ Knowing that we have already used the Dialog modal box in multiple other places,
 
 As you can see below, when the user clicks the single game that exists on the map, it shows the same card from the list view! This is useful because it not only creates a more attractive experience than scrolling through (supposedly) hundreds of games to find the one you want, but also uses a feature that is familiar to the user and reusable and useful for our original goal with memory efficiency!
 
-![Screenshot 2024-04-21 at 5.24.20 PM.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/975dddf8-60df-4936-891f-9505a206bb35/7246968e-cdb4-40bc-8907-170e1c21926c/Screenshot_2024-04-21_at_5.24.20_PM.png)
+![Screenshot 2024-04-22 at 9 48 06 PM](https://github.com/Pmcslarrow/hoop-easy-material-ui/assets/74205136/782ad34b-bb90-47af-8222-937659998bc8)
 
 
 
