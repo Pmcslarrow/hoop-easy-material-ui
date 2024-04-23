@@ -20,7 +20,7 @@ Despite feeling empowered to use raw JSX and CSS to develop the entire applicati
 ---
 
 To begin, I had to get a good theme created that wraps every route to the application (that we have so far). In doing so, we leverage MUI’s theming abilities to create the color, typography, and more that hold the overall theme structure together.
-`
+```javascript
 const theme = createTheme({
     palette: {
         primary: {
@@ -44,7 +44,7 @@ const theme = createTheme({
     },
     spacing: 10,
 })
-`
+```
 
 
 ## Authentication
