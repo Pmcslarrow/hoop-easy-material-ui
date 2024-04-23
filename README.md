@@ -162,6 +162,7 @@ const PlayerOverallRating = ({currentUserID, refreshToken}) => {
 The new code only re-renders on a manaul refresh. This seems very similar to the old version, but the major difference is that it does not force re-renders anymore for multiple other components when this happens, it only manually adjust a select handful.
 
 `
+
 useEffect(() => {
 	getUser(user?.email)
 }, [refresh]) 
@@ -175,6 +176,7 @@ const getUser = React.useCallback(async (email) => {
     console.error(err);
   }
 }, []);
+
 `
 
 ## My Games
