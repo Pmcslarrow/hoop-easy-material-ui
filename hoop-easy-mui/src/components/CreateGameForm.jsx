@@ -40,7 +40,7 @@ const CreateGameForm = ({ user, handleClose, refresh, setRefresh }) => {
             const userDateTime = new Date(`${date} ${time}`);
             const dateOfGame = localToUTC(userDateTime)
             const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            const teammates = { playerID };
+            //const teammates = { playerID };
 
             if (userDateTime < new Date()) {
                 console.log("Cannot add game in the past");

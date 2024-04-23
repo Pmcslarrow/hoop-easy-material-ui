@@ -13,13 +13,7 @@ export default function GoogleMap({ availableGames, user, refresh, setRefresh, g
         lat: 30.00,
         lng: 30.00
     });
-    const colorHashMap = {
-        1: "#8ecae6",
-        2: "#219ebc",
-        3: '#023047',
-        4: '#ffb703',
-        5: '#fb8500'
-    }
+
 
     const handleClose = () => {
         setIsDialogOpen(false)
@@ -43,6 +37,14 @@ export default function GoogleMap({ availableGames, user, refresh, setRefresh, g
     }, [memoizedSetCenter]);
 
     const memoizedMapMarkers = useMemo(() => {
+        const colorHashMap = {
+            1: "#8ecae6",
+            2: "#219ebc",
+            3: '#023047',
+            4: '#ffb703',
+            5: '#fb8500'
+        }
+
         return availableGames.map((game, i) => (
             <AdvancedMarker
                 key={i}

@@ -86,10 +86,8 @@ TablePaginationActions.propTypes = {
 
 
 export default function CustomPaginationActionsTable({rows, columnNames, isMyGames, user, setRefresh, refresh}) {
-    const theme = useTheme()
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(4);
-    const [selectedGame, setSelectedGame] = React.useState()
     const [selectedComponent, setSelectedComponent] = React.useState()
     const [dialogOpen, setDialogOpen] = React.useState(false);
 
@@ -107,7 +105,6 @@ export default function CustomPaginationActionsTable({rows, columnNames, isMyGam
     };
 
     const handleRowClick = (game) => {
-        setSelectedGame(game)
         if (game.col1 === 'confirmed') {
             setSelectedComponent(<SubmitGameData user={user} game={game} refresh={refresh} setRefresh={setRefresh} handleClose={handleClose}/>)
             setDialogOpen(true)

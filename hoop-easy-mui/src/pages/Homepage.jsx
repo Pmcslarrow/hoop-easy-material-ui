@@ -134,7 +134,7 @@ export default function Homepage({ UserContext, MapContext, getUser }) {
     // This should ONLY ever update when we refresh manually. Meaning the user updated information that could affect the overall score
     useEffect(() => {
         getUser(user?.email)
-    }, [refresh])
+    }, [refresh, getUser, user?.email])
 
     if (!user) {
         navigate('/')
